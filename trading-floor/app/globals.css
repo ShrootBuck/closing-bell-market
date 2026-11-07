@@ -364,3 +364,14 @@ button {
     font-size: 16px;
   }
 }
+@media(max-width:720px){
+ .landing,.terminal{grid-template-columns:minmax(0,1fr)}
+ .entry,.intro{min-width:0}
+ .intro h1{font-size:clamp(58px,14vw,88px)}
+ .brand{white-space:nowrap}
+ header .micro{font-size:10px}
+}
+@media(max-width:360px){
+ .intro h1 br{display:block}
+ .intro i{margin-left:0}
+}
