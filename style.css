@@ -1,0 +1,9 @@
+.slidev-layout {background:#f7f6ef;color:#172d26;font-family:Inter,"Helvetica Neue",Arial,sans-serif;padding:55px 64px}
+.slidev-layout h1{font-family:Georgia,serif;font-weight:400;font-size:48px;line-height:1.08;letter-spacing:-1.8px;margin:8px 0 26px;color:#153b30}
+.slidev-layout p{font-size:22px;line-height:1.45;margin:14px 0}
+.slidev-layout .tag{font:600 13px/1.4 ui-monospace,monospace;text-transform:uppercase;letter-spacing:.15em;color:#24755c;border-top:2px solid #24755c;padding-top:12px;margin:0 0 18px}
+.slidev-layout .split{display:grid;grid-template-columns:1fr 1.2fr;gap:30px;align-items:center}
+.slidev-layout .result{background:#e1ebe2;padding:12px 20px;border-left:4px solid #20765b;font-size:23px;margin-top:22px}
+.slidev-layout .katex-display{text-align:left;margin:18px 0}.katex-display>.katex{text-align:left}
+.slidev-layout .credit{font:15px ui-monospace,monospace;color:#51685d;margin-top:35px}
+.slidev-layout img{width:100%}
