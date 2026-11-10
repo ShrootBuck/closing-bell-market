@@ -375,3 +375,10 @@ button {
  .intro h1 br{display:block}
  .intro i{margin-left:0}
 }
+
+.news-image-link { display: block; margin-top: 12px; }
+.news-image { display: block; width: 100%; max-height: 440px; object-fit: contain; border-radius: 8px; background: var(--muted); }
+.news-image-link small { margin-top: 6px; }
+@media (max-width: 720px) {
+  .mobile-wire .news-image { max-height: 260px; }
+}

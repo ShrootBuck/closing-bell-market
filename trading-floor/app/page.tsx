@@ -66,6 +66,17 @@ function Tape({ values }: { values: number[] }) {
     </svg>
   );
 }
+function NewsItem({ event }: { event: Frame["feed"][number] }) {
+  return event.image ? (
+    <a href={event.image} target="_blank" rel="noreferrer" className="news-image-link"
+      aria-label={"Enlarge image: " + event.text}>
+      {/* Screenshots retain their original dimensions and text. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={event.image} alt={event.text} className="news-image" />
+      <small>Tap to enlarge</small>
+    </a>
+  ) : <p>{event.text}</p>;
+}
 export default function Floor() {
   const [room, R] = useState(""),
     [frame, F] = useState<Frame | null>(null),
@@ -121,7 +132,7 @@ export default function Floor() {
   }
   const seated = frame && (frame.host || frame.me),
     s = frame,
-    done = s?.tick === 48;
+    done = !!s && s.tick === s.totalTicks;
   return (
     <main>
       <header>
@@ -146,7 +157,7 @@ export default function Floor() {
             <p>
               Elon has a phone. Albert has a price target.
               <br />
-              You have 96 seconds to beat the room.
+              Trade the headlines. Beat the room.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button
@@ -226,14 +237,14 @@ export default function Floor() {
               {!online
                 ? "Connecting…"
                 : s.start
-                  ? 96 - s.tick * 2 + " SEC TO CLOSE"
+                  ? (s.totalTicks - s.tick) * 2 + " SEC TO CLOSE"
                   : "ROOM " + s.id}
             </span>
           </div>
           {s.feed[0] && !done && (
             <aside className="mobile-wire">
               <b>{s.feed[0].author} · parody</b>
-              <p>{s.feed[0].text}</p>
+              <NewsItem event={s.feed[0]} />
             </aside>
           )}
           <div className="terminal">
@@ -247,7 +258,7 @@ export default function Floor() {
                 <Tape values={s.history} />
                 <div className="axis">
                   <span>OPEN · $100</span>
-                  <span>{s.tick < 24 ? "VALUE DESKS" : "MOMENTUM DESKS"}</span>
+                  <span>{s.momentum ? "MOMENTUM DESKS" : "VALUE DESKS"}</span>
                 </div>
               </div>
               {s.me && (
@@ -373,12 +384,12 @@ export default function Floor() {
                 <CardContent>
                   {s.feed.length ? (
                     s.feed.map((p) => (
-                      <article key={p.bell}>
+                      <article key={p.id}>
                         <div className="byline">
                           <b>{p.author}</b>
                           <span className="micro">BELL 0{p.bell}</span>
                         </div>
-                        <p>{p.text}</p>
+                        <NewsItem event={p} />
                       </article>
                     ))
                   ) : (

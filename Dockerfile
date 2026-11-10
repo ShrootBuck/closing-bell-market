@@ -19,6 +19,7 @@ WORKDIR /app
 ENV NODE_ENV=production PORT=3000 HOSTNAME=0.0.0.0 NEXT_TELEMETRY_DISABLED=1
 COPY --from=game /app/.next/standalone ./
 COPY --from=game /app/.next/static ./.next/static
+COPY --from=game /app/public ./public
 COPY --from=slides /deck/dist ./public/talk
 USER node
 EXPOSE 3000
