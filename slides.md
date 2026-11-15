@@ -237,7 +237,7 @@ Differentiate the price path. The slope is already negative and gets more negati
 
 # Closing Bell
 
-A robotaxi announcement just hit the wire. You have 96 seconds to trade against the room.
+A whale just bought in. You have 96 seconds to trade against the room.
 
 | Go long | Sell short | Go flat |
 |---|---|---|
@@ -246,16 +246,16 @@ A robotaxi announcement just hit the wire. You have 96 seconds to trade against 
 <div class="result"><a href="https://market.zaydkrunz.com/" target="_blank">Open the trading floor ↗</a></div>
 
 <!--
-Get your phones out. Scan the code on the projector and give your desk a name. We’re trading a fictional Tesla stock that starts at a hundred dollars. Going long puts you three shares long. Short does the reverse. Go flat to cash out. You can change your mind at the next quote, but every share you trade costs a quarter. The highest profit at the closing bell wins. Watch what happens when Albert Wang publishes research in the middle of a trading session.
+Get your phones out. Scan the code on the projector and give your desk a name. We’re trading a fictional Tesla stock that starts at a hundred dollars. Going long puts you three shares long. Short does the reverse. Go flat to cash out. You can change your mind at the next quote, but every share you trade costs a quarter. The highest profit at the closing bell wins. Watch the room when a whale buys in or a fund is forced to sell. Your classmates’ trades move the price too.
 -->
 
 ---
 
 <div class="tag">Closing Bell · Desk recap</div>
 
-# Who traded the tweet?
+# Who timed the market?
 
-Winning desk, pick one post. What did you think the rest of the room would do?
+Winning desk, pick one market shock. What did you think the rest of the room would do?
 
 | First half | Second half |
 |---|---|
@@ -263,7 +263,7 @@ Winning desk, pick one post. What did you think the rest of the room would do?
 | The gap tends to shrink. | The gap tends to grow. |
 
 <!--
-Give us your best trade. Did you believe the post, or did you think everybody else would? Look at the chart around the third bell. That’s when the background traders changed sides. The same price gap that used to attract sellers could suddenly attract buyers. The posts and your own orders could overpower either effect. Underneath all that noise is the exact sign change we saw in the homework.
+Give us your best trade. Did you expect the shock to last, or did you think everybody else would? Look at the chart around the third bell. That’s when the background traders changed sides. The same price gap that used to attract sellers could suddenly attract buyers. The shocks and your own orders could overpower either effect. Underneath all that noise is the exact sign change we saw in the homework.
 -->
 
 ---

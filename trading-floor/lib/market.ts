@@ -12,6 +12,7 @@ type Market = {
   tick: number;
   history: number[];
   flow: number;
+  events: (typeof NEWS_EVENTS)[number][];
   desks: Map<string, Desk>;
   listeners: Set<() => void>;
 };
@@ -30,6 +31,14 @@ const fresh = (name: string): Desk => ({
 });
 const quote = (r: Market) => r.history[r.history.length - 1];
 const beat = (r: Market) => Math.min(NEWS_EVENTS.length - 1, Math.floor(r.tick / EVENT_TICKS));
+function shuffledEvents() {
+  const events = [...NEWS_EVENTS];
+  for (let i = events.length - 1; i > 0; i--) {
+    const j = randomInt(i + 1);
+    [events[i], events[j]] = [events[j], events[i]];
+  }
+  return events;
+}
 export function create(solo: boolean) {
   for (const [id, r] of rooms)
     if (Date.now() - r.born > 14400000) rooms.delete(id);
@@ -48,6 +57,7 @@ export function create(solo: boolean) {
     tick: 0,
     history: [100],
     flow: 0,
+    events: shuffledEvents(),
     desks: new Map(),
     listeners: new Set(),
   };
@@ -106,7 +116,7 @@ function advance(r: Market) {
   if (due <= r.tick) return;
   while (r.tick < due) {
     const turn = r.tick % EVENT_TICKS;
-    const event = NEWS_EVENTS[beat(r)];
+    const event = r.events[beat(r)];
     if (r.solo && turn % 3 === 0)
       for (const [id, d] of r.desks)
         if (id !== r.host) fill(r, d, randomInt(-3, 4));
@@ -160,11 +170,10 @@ export function snapshot(r: Market, token: string) {
       ? { name: d.name, position: d.position, pnl: pnl(d), last: d.last }
       : null,
     feed: r.start
-      ? NEWS_EVENTS.slice(0, beat(r) + 1).map((event, i) => ({
+      ? r.events.slice(0, beat(r) + 1).map((event, i) => ({
           id: event.id,
           author: event.source,
           text: event.caption,
-          image: event.image,
           bell: i + 1,
         })).reverse()
       : [],

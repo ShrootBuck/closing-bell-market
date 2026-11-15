@@ -66,17 +66,6 @@ function Tape({ values }: { values: number[] }) {
     </svg>
   );
 }
-function NewsItem({ event }: { event: Frame["feed"][number] }) {
-  return event.image ? (
-    <a href={event.image} target="_blank" rel="noreferrer" className="news-image-link"
-      aria-label={"Enlarge image: " + event.text}>
-      {/* Screenshots retain their original dimensions and text. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={event.image} alt={event.text} className="news-image" />
-      <small>Tap to enlarge</small>
-    </a>
-  ) : <p>{event.text}</p>;
-}
 export default function Floor() {
   const [room, R] = useState(""),
     [frame, F] = useState<Frame | null>(null),
@@ -155,9 +144,9 @@ export default function Floor() {
               <i>Bell.</i>
             </h1>
             <p>
-              Elon has a phone. Albert has a price target.
+              Buy the dip. Short the top.
               <br />
-              Trade the headlines. Beat the room.
+              Beat your classmates before the closing bell.
             </p>
             <div className="flex flex-wrap gap-2">
               <Button
@@ -224,7 +213,7 @@ export default function Floor() {
                 </form>
               </CardContent>
             </Card>
-            <small>Fictional prices and parody posts.</small>
+            <small>One stock. Real classmates. Entirely fake money.</small>
           </div>
         </section>
       ) : (
@@ -243,8 +232,8 @@ export default function Floor() {
           </div>
           {s.feed[0] && !done && (
             <aside className="mobile-wire">
-              <b>{s.feed[0].author} · parody</b>
-              <NewsItem event={s.feed[0]} />
+              <b>{s.feed[0].author}</b>
+              <p>{s.feed[0].text}</p>
             </aside>
           )}
           <div className="terminal">
@@ -376,9 +365,9 @@ export default function Floor() {
             <section>
               <Card>
                 <CardHeader>
-                  <CardTitle>Market wire</CardTitle>
+                  <CardTitle>On the floor</CardTitle>
                   <CardDescription>
-                    Parody feed · posts hit everyone at once
+                    Market shocks · everyone gets the same signal
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -389,12 +378,12 @@ export default function Floor() {
                           <b>{p.author}</b>
                           <span className="micro">BELL 0{p.bell}</span>
                         </div>
-                        <NewsItem event={p} />
+                        <p>{p.text}</p>
                       </article>
                     ))
                   ) : (
                     <p className="dim">
-                      The first post drops at the opening bell.
+                      Whales, squeezes, and panic selling. Stay ready.
                     </p>
                   )}
                 </CardContent>
