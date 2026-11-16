@@ -568,3 +568,25 @@ h1, h2, h3 { margin: 0; letter-spacing: -0.01em; }
 @media (max-width: 1100px) { .howto-steps { grid-template-columns: 1fr; } }
 
 .btn.danger-soft { background: rgba(255, 77, 106, 0.18); color: #ffd3da; border-color: rgba(255, 77, 106, 0.6); }
+
+/* ---------- explainers ---------- */
+.memeloop { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 100%; max-width: 1500px; }
+.ml-step { position: relative; background: rgba(177, 140, 255, 0.08); border: 1px solid rgba(177, 140, 255, 0.4); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 6px; text-align: left; font-size: 1.15em; }
+.ml-emoji { font-size: 2.2em; line-height: 1; }
+.ml-d { color: var(--muted); font-size: 0.85em; margin-top: 4px; }
+.ml-arrow { position: absolute; right: -14px; top: 50%; transform: translate(50%, -50%); color: var(--violet); font-size: 1.6em; font-weight: 700; z-index: 1; }
+.memeloop.compact { gap: 10px; }
+.memeloop.compact .ml-step { padding: 10px 12px; font-size: 0.95em; flex-direction: row; align-items: center; gap: 10px; }
+.memeloop.compact .ml-emoji { font-size: 1.6em; }
+.memeloop.vertical { grid-template-columns: 1fr; gap: 14px; }
+.memeloop.vertical .ml-arrow { right: auto; left: 50%; top: auto; bottom: -15px; transform: translate(-50%, 50%); font-size: 18px; }
+.meme-head { font-family: var(--mono); font-weight: 700; color: var(--violet); letter-spacing: 0.04em; margin-bottom: 8px; }
+.hype-word { color: var(--violet); }
+.fair-explain { font-size: 1.05em; margin-top: -6px; }
+.whathappened { border-radius: 16px; padding: 12px 16px; font-size: 1.05em; line-height: 1.4; }
+.whathappened.stable { background: rgba(76, 201, 255, 0.08); border: 1px solid rgba(76, 201, 255, 0.35); }
+.whathappened.hype { background: rgba(177, 140, 255, 0.1); border: 1px solid rgba(177, 140, 255, 0.4); }
+.profit-ex { display: flex; flex-direction: column; gap: 8px; background: rgba(0, 0, 0, 0.25); border: 1px dashed var(--line2); border-radius: 14px; padding: 12px 16px; text-align: left; font-size: 0.95em; }
+.lg .katex { font-size: 1em; }
+.swap .memeloop { margin: 6px 0 4px; }
+@media (max-width: 1100px) { .memeloop { grid-template-columns: 1fr 1fr; } .ml-arrow { display: none; } }

@@ -22,12 +22,9 @@ export function equations(spec: RoundSpec) {
 
 export function verdict(spec: RoundSpec, r: NonNullable<View['round']>['result']) {
   if (!r) return null;
-  if (spec.kind === 'stable') {
-    const shrank = Math.abs(r.gapEnd) < Math.abs(r.gap0) * 0.6;
-    return { ok: shrank, label: shrank ? 'STABLE ✓' : 'PLOT TWIST' };
-  }
-  const peak = Math.abs(r.peak?.gap ?? r.gapEnd);
-  const grew = peak > Math.abs(r.gap0) * 1.8;
+  // One rule everywhere: compare the gap at the closing bell with the gap at the open.
+  const grew = r.grew ?? Math.abs(r.gapEnd) > Math.abs(r.gap0);
+  if (spec.kind === 'stable') return { ok: !grew, label: grew ? 'PLOT TWIST' : 'STABLE ✓' };
   return { ok: grew, label: grew ? (r.burst != null ? 'BUBBLE 🫧💥' : 'UNSTABLE 🔥') : 'HELD THE LINE?!' };
 }
 
@@ -254,9 +251,9 @@ function Lobby({ room, view, isHost }: { room: Room; view: View; isHost: boolean
             The floor <span className="muted mono">{humans.length} trader{humans.length === 1 ? '' : 's'}{bots ? ` + ${bots} bots` : ''}</span>
           </h2>
           <div className="howto">
-            <span>① Get a card: your secret limit</span>
-            <span>② Find a buyer/seller IRL &amp; haggle</span>
-            <span>③ Report the deal → profit</span>
+            <span>① Check your secret card</span>
+            <span>② Find someone on the other side &amp; haggle</span>
+            <span>③ Tap “I made a deal”, they confirm</span>
           </div>
         </div>
         <div className="chips">
@@ -344,6 +341,52 @@ function Settings({ room, view }: { room: Room; view: View }) {
   );
 }
 
+// ---------------- shared explainers ----------------
+
+/** The meme-mode feedback loop, told as a story with a concrete number. */
+export function MemeLoop({ compact, vertical }: { compact?: boolean; vertical?: boolean }) {
+  const steps = [
+    { e: '👀', t: 'Everyone watches the chart', d: 'Price climbing? Buyers think “buy now, it’ll cost more later.” Sellers think “why sell now?”' },
+    { e: '🃏', t: 'Cards follow the trend', d: 'The app does this for you: price rising $5 a minute → every card +$5. Falling $5 a minute → every card −$5.' },
+    { e: '🤝', t: 'Higher cards → higher deals', d: 'Buyers can now pay more and sellers want more, so trades happen at higher prices.' },
+    { e: '🔁', t: 'It feeds itself', d: 'Higher prices → the chart climbs faster → cards go up again. That’s a bubble. Works the same way down (a crash).' },
+  ];
+  return (
+    <div className={`memeloop ${compact ? 'compact' : ''} ${vertical ? 'vertical' : ''}`}>
+      {steps.map((s, i) => (
+        <motion.div
+          key={s.t}
+          className="ml-step"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 + i * (compact ? 0.15 : 0.45) }}
+        >
+          <div className="ml-emoji">{s.e}</div>
+          <div>
+            <b>{s.t}</b>
+            {!compact && <div className="ml-d">{s.d}</div>}
+          </div>
+          {i < steps.length - 1 && <span className="ml-arrow">{vertical ? '↓' : '→'}</span>}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+/** Worked example of profit for a buyer and a seller. */
+export function ProfitExample() {
+  return (
+    <div className="profit-ex">
+      <div>
+        <RoleTag role="buyer" /> card says <b className="mono">$50</b> → buy for <b className="mono">$42</b> = <b className="up">+$8</b> · pay <b className="mono">$55</b> = <b className="down">−$5</b>
+      </div>
+      <div>
+        <RoleTag role="seller" /> card says <b className="mono">$30</b> → sell for <b className="mono">$38</b> = <b className="up">+$8</b> · sell for <b className="mono">$25</b> = <b className="down">−$5</b>
+      </div>
+    </div>
+  );
+}
+
 // ---------------- how to play ----------------
 
 export const HOWTO = [
@@ -378,6 +421,7 @@ function HowTo({ view }: { view: View }) {
         <div className="howto-money">
           💰 Profit = the gap between the price and your card. <b>Most money wins.</b>
         </div>
+        <ProfitExample />
         <div className="muted">
           You get a new card after every deal, so keep going. Half the room are{' '}
           <RoleTag role="buyer" /> and half are <RoleTag role="seller" />. At halftime you swap.
@@ -414,7 +458,7 @@ function Briefing({ view }: { view: View }) {
         {choice && (
           <div className="priceboard">
             <div>
-              <div className="muted small">FAIR PRICE (supply = demand)</div>
+              <div className="muted small">FAIR PRICE p* (supply = demand)</div>
               <div className="mono pb-val amber">{money(spec.pStar)}</div>
             </div>
             <div className="pb-arrow">vs</div>
@@ -428,9 +472,16 @@ function Briefing({ view }: { view: View }) {
             </div>
           </div>
         )}
+        {choice && (
+          <div className="muted fair-explain">
+            Fair price = where the number of buyers who'd buy matches the number of sellers who'd sell. Today the market opens{' '}
+            <b className={gap >= 0 ? 'up' : 'down'}>{money(Math.abs(gap), 0)} {gap >= 0 ? 'above' : 'below'}</b> it.
+          </div>
+        )}
         {hype && (
           <div className="meme-note">
-            🚀 <b>Meme mode:</b> everyone's card follows the chart. Price going up → every number goes up.
+            <div className="meme-head">🚀 MEME MODE: cards follow the chart</div>
+            <MemeLoop compact />
           </div>
         )}
         <div className={`eq-card ${choice ? 'eq-small' : ''}`}>
@@ -468,11 +519,11 @@ function Briefing({ view }: { view: View }) {
             <>
               <div className="predict-q">🔮 MAKE THE CALL</div>
               <div className="predict-ask">
-                By the closing bell, the {money(Math.abs(gap), 0)} gap will…
+                At the closing bell, will the price be closer to {money(spec.pStar, 0)} or farther away?
               </div>
               <div className="call-opts">
-                <div className="call-opt shrink">🎯 SHRINK<span>price drifts back to fair</span></div>
-                <div className="call-opt grow">🚀 GROW<span>price runs further away</span></div>
+                <div className="call-opt shrink">🎯 SHRINK<span>ends closer than {money(Math.abs(gap), 0)} from fair</span></div>
+                <div className="call-opt grow">🚀 GROW<span>ends more than {money(Math.abs(gap), 0)} away</span></div>
               </div>
               <div className="muted">Right call = {money(view.settings.predictBonus, 0)} on the Rich List. Vote on your phone.</div>
             </>
@@ -550,13 +601,13 @@ function Trading({ room, view, toasts }: { room: Room; view: View; toasts: { id:
           <Stat label="AVG PRICE" value={vwap != null ? money(vwap) : '—'} />
           {hype ? (
             <div className={`momentum ${r.shift >= 0 ? 'up' : 'down'}`}>
-              <div className="muted small">MOMENTUM p′</div>
+              <div className="muted small">🚀 HYPE (price trend p′)</div>
               <div className="mono mom-val">
-                {r.momentum >= 0 ? '+' : '−'}${Math.abs(r.momentum).toFixed(1)}/min
+                {Math.abs(r.momentum) < 0.5 ? 'flat' : `${r.momentum >= 0 ? '📈 rising' : '📉 falling'} $${Math.abs(r.momentum).toFixed(1)}/min`}
               </div>
               <MomentumBar shift={r.shift} />
               <div className="small">
-                every card <b className="mono">{signed(r.shift)}</b>
+                → every card <b className="mono">{signed(r.shift)}</b>
               </div>
             </div>
           ) : view.settings.predictMode === 'choice' || view.practice ? (
@@ -661,7 +712,6 @@ function Recap({ view }: { view: View }) {
   if (!res) return null;
   const hype = spec.kind === 'hype';
   const durS = r.durationMs / 1000;
-  const peak = res.peak ? Math.abs(res.peak.gap) : Math.abs(res.gapEnd);
   return (
     <div className="recap">
       <div className="recap-chart">
@@ -672,13 +722,23 @@ function Recap({ view }: { view: View }) {
           <div className="legend">
             <span className="lg pstar-lg">p* = {money(spec.pStar)}</span>
             {res.fit && <span className="lg fit-lg">class fit</span>}
-            {hype && <span className="lg theory-lg">theory e^{'{kt}'}</span>}
+            {hype && <span className="lg theory-lg">theory <Tex tex="e^{kt}" /></span>}
           </div>
         </div>
         <Chart prints={r.prints} durationS={durS} pStar={spec.pStar} curves={roundCurves(spec, res, durS)} />
         {v && <Stamp kind={spec.kind}>{v.label}</Stamp>}
       </div>
       <div className="recap-side">
+        <div className={`whathappened ${spec.kind}`}>
+          <b>What happened: </b>
+          {spec.kind === 'stable'
+            ? res.grew
+              ? 'The price didn’t make it back to fair this time. Usually traders pull it back: buyers won’t pay far above their cards and sellers undercut each other.'
+              : 'Traders pulled the price back toward fair. When it’s too high, buyers walk away; when it’s too low, sellers do. The gap shrinks: that’s a stable market.'
+            : res.grew
+              ? `The ${res.gap0 >= 0 ? 'rising' : 'falling'} chart moved every card ${res.gap0 >= 0 ? 'up' : 'down'}, so deals happened ${res.gap0 >= 0 ? 'higher' : 'lower'}, which moved the chart more. The gap fed itself: an unstable market.`
+              : 'The hype never caught on this round, so the gap didn’t grow. With more trades in the same direction it usually snowballs.'}
+        </div>
         <div className="recap-close">
           <div className="muted small">THE CLOSE</div>
           <div className="mono huge">{money(res.close)}</div>
@@ -693,16 +753,21 @@ function Recap({ view }: { view: View }) {
           </div>
           <div className="gap-arrow">→</div>
           <div>
-            <div className="muted small">{hype ? 'BIGGEST GAP' : 'GAP AT CLOSE'}</div>
-            <div className={`mono gapv ${hype ? 'down' : 'up'}`}>{hype ? signed(res.peak?.gap ?? res.gapEnd) : signed(res.gapEnd)}</div>
+            <div className="muted small">GAP AT CLOSE</div>
+            <div className={`mono gapv ${res.grew ? 'down' : 'up'}`}>{signed(res.gapEnd)}</div>
           </div>
           <div className="gap-x">
             <div className="mono">
-              {hype ? `${(peak / Math.max(0.5, Math.abs(res.gap0))).toFixed(1)}×` : `${Math.round((Math.abs(res.gapEnd) / Math.max(0.5, Math.abs(res.gap0))) * 100)}%`}
+              {res.grew
+                ? `${(Math.abs(res.gapEnd) / Math.max(0.5, Math.abs(res.gap0))).toFixed(1)}×`
+                : `${Math.round((Math.abs(res.gapEnd) / Math.max(0.5, Math.abs(res.gap0))) * 100)}%`}
             </div>
-            <div className="muted small">{hype ? 'gap blew up' : 'of the gap left'}</div>
+            <div className="muted small">{res.grew ? 'gap grew' : 'of the gap left'}</div>
           </div>
         </div>
+        {hype && res.peak && Math.abs(res.peak.gap) > Math.abs(res.gapEnd) + 1 && (
+          <div className="muted small peak-note">Biggest gap during the round: {signed(res.peak.gap)} at {mmss(res.peak.t * 1000)}</div>
+        )}
         {res.fit && (
           <div className="fitbox">
             <Tex tex={`p(t) \\approx ${num(res.fit.P)} ${res.fit.A >= 0 ? '+' : '-'} ${num(Math.abs(res.fit.A), 1)}\\,e^{${num(res.fit.rate)}\\,t}`} />
@@ -830,28 +895,23 @@ function Swap({ view }: { view: View }) {
       <motion.h1 className="swap-title" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 160, damping: 12 }}>
         HALFTIME: <span className="up">BUYERS</span> ⇄ <span className="down">SELLERS</span>
       </motion.h1>
-      <p className="swap-sub">Everyone swaps roles. Check your phone.</p>
+      <p className="swap-sub">
+        Buyers are now sellers and sellers are now buyers. Check your phone. And now: <b className="hype-word">🚀 MEME MODE</b>
+      </p>
+      <MemeLoop />
       <div className="swap-grid">
-        <motion.div className="swap-card" initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
-          <div className="phase-badge hype">MEME MODE ACTIVATED</div>
-          <h3>🚀 Your card now follows the chart</h3>
-          <p className="swap-plain">Price going up → every card's number goes up. Price going down → every number goes down.</p>
-          <Tex block tex={`\\text{your limit} = \\text{base} + \\beta\\,p', \\qquad \\beta = ${s.hype}\\ \\text{min}`} />
-          <ul>
-            <li>
-              📈 Price <b>rising</b>? Buyers FOMO: they'll <b>pay more</b>. Sellers hold out: they <b>ask more</b>.
-            </li>
-            <li>
-              📉 Price <b>falling</b>? Buyers wait. Sellers dump.
-            </li>
-          </ul>
+        <motion.div className="swap-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.2 }}>
+          <h3>On your phone</h3>
+          <p className="swap-plain">
+            Your card shows <b>base + hype</b>. Hype = how fast the price is moving × {s.hype} min. A 📈 or 📉 at the top shows which way.
+          </p>
+          <p className="muted">Profit still works the same: buy below your card, sell above it.</p>
         </motion.div>
-        <motion.div className="swap-card" initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.8, duration: 0.6 }}>
-          <h3>That's Part C of the math</h3>
-          <Tex block tex="q_d = d_0 - d_1 p + d_2 p'" />
-          <Tex block tex="q_s = -s_0 + s_1 p - s_2 p'" />
+        <motion.div className="swap-card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 2.5 }}>
+          <h3>That's Part C of the math 🤓</h3>
+          <Tex block tex="q_d = d_0 - d_1 p + d_2 p' \qquad q_s = -s_0 + s_1 p - s_2 p'" />
           <Tex block tex="\Rightarrow\; p' = k\,(p - p^*),\quad k > 0" />
-          <p className="muted">Same equilibrium p*. Opposite sign. Predict accordingly. 😈</p>
+          <p className="muted">Same fair price p*. But now the sign is positive, so a gap grows instead of shrinking.</p>
         </motion.div>
       </div>
     </div>

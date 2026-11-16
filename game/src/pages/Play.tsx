@@ -8,7 +8,7 @@ import { Avatar, Logo, Money, RoleTag, StatusPill, Tex } from '../ui/bits';
 import { Chart } from '../ui/Chart';
 import { liveClock, mmss, money, num, ranked, signed, useFrame, vibrate } from '../util';
 import { sfx, unlockAudio } from '../sound';
-import { equations, HOWTO } from './Host';
+import { equations, HOWTO, MemeLoop, ProfitExample } from './Host';
 import { awards } from './Final';
 
 type Room = ReturnType<typeof useRoom>;
@@ -233,6 +233,7 @@ function Steps() {
         </motion.div>
       ))}
       <div className="rule-money">💰 Profit = gap between the price and your card. Most money wins.</div>
+      <ProfitExample />
     </div>
   );
 }
@@ -316,7 +317,12 @@ function PhoneBriefing({ room, view }: { room: Room; view: View }) {
         <span className={`phase-badge ${spec.kind}`}>{spec.kind === 'stable' ? 'BLUE CHIP' : 'MEME MODE'}</span>
         <b>${spec.ticker}</b> <span className="muted">round {view.roundIndex + 1} of {view.totalRounds}</span>
       </div>
-      {spec.kind === 'hype' && <div className="meme-note">🚀 <b>Meme mode:</b> your card follows the chart. Price going up → your number goes up.</div>}
+      {spec.kind === 'hype' && (
+        <div className="meme-note">
+          <div className="meme-head">🚀 MEME MODE: your card follows the chart</div>
+          Price rising $5 a minute → your card +$5. Falling → your card goes down. Rising prices push cards up, which pushes prices up more.
+        </div>
+      )}
       {choice ? (
         <div className="predict-card phone-predict">
           <div className="pp-board">
@@ -330,13 +336,15 @@ function PhoneBriefing({ room, view }: { room: Room; view: View }) {
             </div>
           </div>
           <div className="predict-q">🔮 Make the call</div>
-          <div className="muted small">By the closing bell, the {money(Math.abs(open - spec.pStar), 0)} gap will… Right call = {money(view.settings.predictBonus, 0)}.</div>
+          <div className="muted small">
+            It opens {money(Math.abs(open - spec.pStar), 0)} {open >= spec.pStar ? 'above' : 'below'} fair. At the closing bell, will it be closer to {money(spec.pStar, 0)} or farther? Right call = {money(view.settings.predictBonus, 0)}.
+          </div>
           <div className="call-btns">
             <button className={`call-btn shrink ${me.prediction === -1 ? 'on' : ''}`} onClick={() => call(-1)}>
-              🎯 SHRINK<span>back to fair price</span>
+              🎯 SHRINK<span>ends closer to fair</span>
             </button>
             <button className={`call-btn grow ${me.prediction === 1 ? 'on' : ''}`} onClick={() => call(1)}>
-              🚀 GROW<span>runs further away</span>
+              🚀 GROW<span>ends farther away</span>
             </button>
           </div>
           {me.prediction != null && <div className="muted small">🔒 Locked in. Tap the other one to switch.</div>}
@@ -432,7 +440,7 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
             </div>
             {hype && (
               <div className="card-hype mono small">
-                🚀 follows the chart: {money(card.base, 0)} <span className={r.shift >= 0 ? 'up' : 'down'}>{signed(r.shift)}</span>
+                base {money(card.base, 0)} <span className={r.shift >= 0 ? 'up' : 'down'}>{r.shift >= 0 ? '+' : '−'} hype {money(Math.abs(r.shift))} {r.shift >= 0 ? '📈' : '📉'}</span>
               </div>
             )}
             <div className="card-life">
@@ -695,10 +703,9 @@ function PhoneSwap({ view }: { view: View }) {
         <RoleTag role={me.role} big />
       </motion.div>
       <div className="phase-badge hype">MEME MODE</div>
-      <p>
-        🚀 Your card now <b>follows the chart</b>. Price going up → your number goes up. Price going down → it goes down.
-      </p>
-      <p className="muted small">So if the price starts running away from fair value… does anything pull it back? 👀</p>
+      <p className="muted small">Your card now follows the chart:</p>
+      <MemeLoop compact vertical />
+      <p className="muted small">On your card: base + hype. Profit works the same as before.</p>
     </div>
   );
 }

@@ -189,7 +189,7 @@ function MathVsClass({ history }: { history: PastRound[] }) {
         <div className="mvc-label">
           <div className="phase-badge stable">HALF 1 · BLUE CHIP</div>
           <Tex block tex="p' = -\lambda(d_1+s_1)(p-p^*)" />
-          <div className="muted small">Theory: c &lt; 0, gap decays like e^{'{ct}'}</div>
+          <div className="muted small">Theory: <Tex tex="c<0" />, so the gap shrinks like <Tex tex="e^{ct}" /></div>
           {s.lambda != null && (
             <div className="mvc-stat">
               your class's λ̂ ≈ <b className="mono">{num(s.lambda, 3)}</b>
@@ -202,7 +202,7 @@ function MathVsClass({ history }: { history: PastRound[] }) {
         <div className="mvc-label">
           <div className="phase-badge hype">HALF 2 · MEME MODE</div>
           <Tex block tex="p' = k(p-p^*),\ k=\frac{d_1+s_1}{d_2+s_2}" />
-          <div className="muted small">Theory: k &gt; 0, gap grows like e^{'{kt}'}</div>
+          <div className="muted small">Theory: <Tex tex="k>0" />, so the gap grows like <Tex tex="e^{kt}" /></div>
           {s.kMean != null && (
             <div className="mvc-stat">
               avg k̂ = <b className="mono">{num(s.kMean)}</b> vs k = <b className="mono">{num(s.kTheory ?? 0)}</b>
@@ -212,7 +212,7 @@ function MathVsClass({ history }: { history: PastRound[] }) {
         <div className="mvc-charts">{s.hype.map((h, i) => <RoundMini key={i} h={h} i={i + 3} />)}</div>
       </div>
       <div className="mvc-legend muted small">
-        <span className="lg pstar-lg">p* (theory)</span> <span className="lg fit-lg">curve fit to your trades</span> <span className="lg theory-lg">p* + (p₀−p*)e^{'{kt}'}</span>
+        <span className="lg pstar-lg">fair price <Tex tex="p^*" /></span> <span className="lg fit-lg">curve fit to your trades</span> <span className="lg theory-lg">theory <Tex tex="p^* + (p_0 - p^*)e^{kt}" /></span>
       </div>
     </div>
   );
