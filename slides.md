@@ -338,7 +338,11 @@ $$
 
 </div>
 
+<div class="result expect-note">
+
 When the price is expected to rise, buyers purchase more and suppliers sell less.
+
+</div>
 
 <!--
 **The big idea:** now people react to the trend, not just the price. If the price is rising, buyers rush in and sellers hold out.
