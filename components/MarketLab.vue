@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { onSlideEnter, useIsSlideActive } from '@slidev/client'
+const active = useIsSlideActive()
+const animationKey = ref(0)
+onSlideEnter(() => animationKey.value++)
 const props = defineProps<{ mode: 'supply' | 'stable' | 'unstable' | 'example' }>()
 const price = ref(4), speed = ref(.5), expectations = ref(10), wide = ref(false)
 const equilibrium = computed(() => props.mode === 'supply' ? 6 : props.mode === 'example' ? 50 / 3 : 10)
@@ -22,17 +26,17 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
 </script>
 
 <template>
-<section class="market-lab" @keydown.stop @click.stop>
+<section :class="{ active }" class="market-lab" @keydown.stop @click.stop>
   <template v-if="mode === 'supply'">
     <svg viewBox="0 0 440 250" role="img" aria-label="Supply and demand. Move price to compare quantities.">
-      <path d="M44 18V208H414" fill="none" stroke="#83988e"/>
-      <path d="M44 55L352 208" fill="none" stroke="#08765a" stroke-width="3"/>
-      <path d="M44 177L352 24" fill="none" stroke="#b64e35" stroke-width="3"/>
-      <path :d="'M44 '+(208-price*15.3)+'H414'" stroke="#153b30" stroke-dasharray="5 5"/>
-      <circle :cx="44+Math.max(0,demand)*30.8" :cy="208-price*15.3" r="5" fill="#08765a"/>
-      <circle :cx="44+Math.max(0,supply)*30.8" :cy="208-price*15.3" r="5" fill="#b64e35"/>
+      <path d="M44 18V208H414" fill="none" stroke="#719a88"/>
+      <path d="M44 55L352 208" fill="none" stroke="#70e6a7" stroke-width="3"/>
+      <path d="M44 177L352 24" fill="none" stroke="#f5bd70" stroke-width="3"/>
+      <path :d="'M44 '+(208-price*15.3)+'H414'" stroke="#d7eddf" stroke-dasharray="5 5"/>
+      <circle :cx="44+Math.max(0,demand)*30.8" :cy="208-price*15.3" r="5" fill="#70e6a7"/>
+      <circle :cx="44+Math.max(0,supply)*30.8" :cy="208-price*15.3" r="5" fill="#f5bd70"/>
       <text x="8" y="23">p</text><text x="370" y="238">quantity</text>
-      <text x="62" y="44" fill="#08765a">demand</text><text x="292" y="43" fill="#b64e35">supply</text>
+      <text x="62" y="44" fill="#70e6a7">demand</text><text x="292" y="43" fill="#f5bd70">supply</text>
       <text x="5" :y="213-price*15.3">{{ price.toFixed(1) }}</text>
       <text x="245" y="130">p* = 6</text>
     </svg>
@@ -41,15 +45,16 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
     <p class="lab-caption">{{ price < 6 ? 'Excess demand → price rises' : price > 6 ? 'Excess supply → price falls' : 'Quantities match → price holds' }}</p>
   </template>
   <template v-else>
+    <button class="replay" @click="animationKey++" aria-label="Replay price paths">↻ Replay paths</button>
     <svg viewBox="0 0 440 250" role="img" :aria-label="mode === 'example' ? 'Numerical price path over time' : mode + ' price paths from four initial prices'">
       <defs><clipPath :id="chartId"><rect x="44" y="17" width="370" height="191"/></clipPath></defs>
-      <path d="M44 18V208H414" fill="none" stroke="#83988e"/>
-      <path v-for="value in axis" :key="value" :d="'M44 '+y(value)+'H414'" stroke="#d0dad1"/>
+      <path d="M44 18V208H414" fill="none" stroke="#719a88"/>
+      <path v-for="value in axis" :key="value" :d="'M44 '+y(value)+'H414'" stroke="#284d40"/>
       <text v-for="value in axis" :key="'label'+value" x="3" :y="y(value)+5">{{ value }}</text>
-      <path :d="'M44 '+y(equilibrium)+'H414'" stroke="#52635a" stroke-dasharray="5 5"/>
+      <path :d="'M44 '+y(equilibrium)+'H414'" stroke="#bad4c7" stroke-dasharray="5 5"/>
       <text x="300" :y="y(equilibrium)-7">p* = {{ equilibrium.toFixed(mode === 'example' ? 2 : 0) }}</text>
       <g :clip-path="'url(#'+chartId+')'">
-        <polyline v-for="initial in starts" :key="initial" :points="curve(initial)" fill="none" :stroke="mode === 'stable' ? '#08765a' : '#b64e35'" stroke-width="3"/>
+        <polyline class="draw-curve" pathLength="1" v-for="(initial, index) in starts" :key="initial + animationKey" :style="{ animationDelay: (index * 120) + 'ms' }" :points="curve(initial)" fill="none" :stroke="mode === 'stable' ? '#70e6a7' : '#f5bd70'" stroke-width="3"/>
       </g>
       <text x="10" y="13">price</text><text x="42" y="235">0</text><text x="340" y="235">{{ horizon }} {{ mode === 'example' ? 'months' : 'time units' }}</text>
     </svg>
@@ -72,14 +77,25 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
 </template>
 
 <style scoped>
-.market-lab{background:#fffdf7;border:1px solid #d4ddd1;border-radius:12px;padding:14px}
-svg{width:100%;height:190px;display:block;font:14px Arial,sans-serif;fill:#52635a}
-label{display:grid;grid-template-columns:auto 1fr 42px;gap:9px;align-items:center;font:14px Arial,sans-serif;color:#153b30}
-input{width:100%;accent-color:#24755c}output{text-align:right;font-variant-numeric:tabular-nums}
+.market-lab{position:relative;background:#0b2d23;border:1px solid #315647;border-radius:12px;padding:14px}
+svg{width:100%;height:190px;display:block;font:14px Arial,sans-serif;fill:#bad4c7}
+label{display:grid;grid-template-columns:auto 1fr 42px;gap:9px;align-items:center;font:14px Arial,sans-serif;color:#d7eddf}
+input{width:100%;accent-color:#70e6a7}output{text-align:right;font-variant-numeric:tabular-nums}
 .lab-readout,.phase-line{font:16px Arial,sans-serif;margin-top:14px;text-align:center}
 .phase-line b{padding:0 14px}
-.market-lab .lab-caption{font:15px/1.35 Arial,sans-serif;margin:12px 0 0;color:#52635a}
+.market-lab .lab-caption{font:15px/1.35 Arial,sans-serif;margin:12px 0 0;color:#bad4c7}
 .lab-buttons{display:flex;gap:8px}
-button{background:#edf0e7;border:1px solid #c6d3c5;border-radius:6px;padding:8px;font:14px Arial;cursor:pointer;color:#153b30}
-button[aria-pressed=true]{background:#153b30;color:white}
+button{background:#1c4535;border:1px solid #426c58;border-radius:6px;padding:8px;font:14px Arial;cursor:pointer;color:#d7eddf}
+button[aria-pressed=true]{background:#d7eddf;color:white}
+</style>
+
+<style scoped>
+.active .draw-curve{stroke-dasharray:1;stroke-dashoffset:1;animation:trace-price 1.5s cubic-bezier(.2,.6,.2,1) forwards}
+@keyframes trace-price{to{stroke-dashoffset:0}}
+.market-lab{box-shadow:0 18px 45px #001a1250}
+button[aria-pressed=true]{background:#70e6a7;color:#09271e}
+@media(prefers-reduced-motion:reduce){.active .draw-curve{animation:none;stroke-dashoffset:0}}
+</style>
+<style scoped>
+.replay{display:block;margin:0 0 6px auto;font-size:12px;padding:4px 8px}
 </style>

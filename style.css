@@ -17,3 +17,33 @@
 .slidev-layout{padding:38px 54px}
 .slidev-layout h1{font-size:44px;margin-bottom:20px}
 .slidev-layout .tag{margin-bottom:14px}
+/* Emerald, ivory and gold, like an engraved banknote. */
+.slidev-layout{background:radial-gradient(ellipse at 90% 10%,#24533a88,transparent 55%),#08271e;color:#eff4e7}
+.slidev-layout h1{color:#f6f1d9}
+.slidev-layout .tag{color:#a9e5b8;border-color:#a9e5b8}
+.slidev-layout .credit{color:#b6cbbb}
+.slidev-layout .result{background:#204b35;color:#f4f6e6;border-color:#d6b66c;box-shadow:0 12px 30px #00180e40}
+.slidev-layout .katex{color:#ede3bb}
+.slidev-layout a{color:#cef29d}
+.slidev-layout .analogy-grid>div,.slidev-layout .feedback-row>div{background:#0c3024;border-color:#38634c;box-shadow:0 15px 35px #00190e45}
+.slidev-layout .feedback-row>span{color:#d6b66c}
+.slidev-layout .feedback-row .katex-display{margin:12px 0 0;text-align:center}
+.slidev-layout .feedback-row .katex-display>.katex{text-align:center}
+.slidev-layout svg text{fill:#c4decf}
+.slidev-layout th,.slidev-layout td{border-color:#42634e}
+.slidev-layout th{color:#cef29d}
+.market-shift-enter-active,.market-shift-leave-active{transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+.market-shift-enter-from{opacity:0;transform:translateY(24px) scale(.985)}
+.market-shift-leave-to{opacity:0;transform:translateY(-14px)}
+.slidev-layout h1{animation:heading-arrive .7s cubic-bezier(.2,.8,.2,1) both}
+.slidev-layout .tag{animation:rule-arrive .65s ease both;transform-origin:left}
+.slidev-layout .market-lab{animation:panel-arrive .8s .12s ease both}
+.slidev-vclick-target{transition:opacity .45s ease,transform .5s cubic-bezier(.2,.8,.2,1),filter .4s ease}
+.slidev-vclick-hidden{opacity:0;transform:translateY(18px);filter:blur(5px);pointer-events:none}
+@keyframes heading-arrive{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes rule-arrive{from{opacity:0;transform:scaleX(.7)}to{opacity:1;transform:scaleX(1)}}
+@keyframes panel-arrive{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){
+ .slidev-layout h1,.slidev-layout .tag,.slidev-layout .market-lab{animation:none}
+ .market-shift-enter-active,.market-shift-leave-active,.slidev-vclick-target{transition:none}
+}

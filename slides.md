@@ -8,9 +8,12 @@ fonts:
   provider: none
 duration: 20min
 routerMode: hash
+transition: market-shift
+
+
 ---
 
-<div class="tag">Capstone differential equations</div>
+<div class="tag">The trading floor · Differential equations</div>
 
 <div class="split"><div>
 
@@ -76,7 +79,7 @@ $$
 
 Set $x=p-p^*$ and $c=-\lambda(d_1+s_1)$. Then $x'=cx$.
 
-<div class="result">
+<div v-click class="result">
 
 $x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
 
@@ -145,7 +148,7 @@ p' &= k(p-p^*),\qquad k=\frac{d_1+s_1}{d_2+s_2}>0.
 \end{aligned}
 $$
 
-<div class="result">
+<div v-click class="result">
 
 Using $x=p-p^*$ again gives $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
 
@@ -183,22 +186,22 @@ Yes. Every point on both curves satisfies demand equals supply. But pick a start
 # Which way does a small push send it?
 
 <div class="analogy-grid">
-<div>
+<div v-click="1">
 
 ### Price adjustment
 
-<svg viewBox="0 0 380 120" role="img" aria-label="A ball settles at the bottom of a valley"><path d="M20 15Q190 200 360 15" fill="none" stroke="#08765a" stroke-width="4"/><circle cx="190" cy="107" r="10" fill="#08765a"/><text x="70" y="60">↘</text><text x="290" y="60">↙</text></svg>
+<svg viewBox="0 0 380 120" role="img" aria-label="A ball settles at the bottom of a valley"><path d="M20 15Q190 200 360 15" fill="none" stroke="#70e6a7" stroke-width="4"/><circle cx="190" cy="107" r="10" fill="#70e6a7"/><text x="70" y="60">↘</text><text x="290" y="60">↙</text></svg>
 
 $p'=-a(p-p^*)$, with $a>0$.
 
 Above equilibrium → price falls.<br/>
 Below equilibrium → price rises.
 
-</div><div>
+</div><div v-click="2">
 
 ### Expectations model
 
-<svg viewBox="0 0 380 120" role="img" aria-label="A ball moves away from the top of a hill"><path d="M20 110Q190 -75 360 110" fill="none" stroke="#b64e35" stroke-width="4"/><circle cx="190" cy="9" r="9" fill="#b64e35"/><text x="70" y="60">↙</text><text x="290" y="60">↘</text></svg>
+<svg viewBox="0 0 380 120" role="img" aria-label="A ball moves away from the top of a hill"><path d="M20 110Q190 -75 360 110" fill="none" stroke="#f5bd70" stroke-width="4"/><circle cx="190" cy="9" r="9" fill="#f5bd70"/><text x="70" y="60">↙</text><text x="290" y="60">↘</text></svg>
 
 $p'=k(p-p^*)$, with $k>0$.
 
@@ -229,7 +232,7 @@ $$
 p(t)=\frac{50}{3}-\frac{35}{3}e^{3t/10}
 $$
 
-<div class="result">
+<div v-click class="result">
 
 At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
 
@@ -270,9 +273,15 @@ Differentiate the price path. The slope is already negative and gets more negati
 
 # Why does the fall accelerate?
 
-<div class="feedback-row"><div>Price falls<br/><strong>$p'&lt;0$</strong></div><span>→</span><div>Buyers wait<br/><strong>$4p'&lt;0$</strong></div><span>+</span><div>Sellers sell now<br/><strong>$-6p'&gt;0$</strong></div></div>
+<div class="feedback-row">
+<div v-click="1">Price falls<MathTex tex="p' < 0" block /></div>
+<span v-click="2">→</span>
+<div v-click="2">Buyers wait<MathTex tex="4p' < 0" block /></div>
+<span v-click="3">+</span>
+<div v-click="3">Sellers sell now<MathTex tex="-6p' > 0" block /></div>
+</div>
 
-<div class="result">Both expectation effects favor a further decline.</div>
+<div v-click="4" class="result">Both expectation effects favor a further decline.</div>
 
 At the same price, buyers demand less and sellers supply more than they would without the trend terms.
 
