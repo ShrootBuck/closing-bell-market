@@ -566,3 +566,5 @@ h1, h2, h3 { margin: 0; letter-spacing: -0.01em; }
 .card.seller .card-role { color: var(--pink); }
 .card-tip { font-size: 14px; font-weight: 700; opacity: 0.85; }
 @media (max-width: 1100px) { .howto-steps { grid-template-columns: 1fr; } }
+
+.btn.danger-soft { background: rgba(255, 77, 106, 0.18); color: #ffd3da; border-color: rgba(255, 77, 106, 0.6); }

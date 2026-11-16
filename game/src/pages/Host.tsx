@@ -347,7 +347,7 @@ function Settings({ room, view }: { room: Room; view: View }) {
 // ---------------- how to play ----------------
 
 export const HOWTO = [
-  { emoji: '🃏', title: 'Check your card', body: 'Buyers: never pay MORE than your number. Sellers: never sell for LESS than your number.' },
+  { emoji: '🃏', title: 'Check your card', body: 'Buyers: pay LESS than your number to profit. Sellers: sell for MORE than your number. Go past it and you lose money.' },
   { emoji: '🗣️', title: 'Find someone & haggle', body: 'Buyers find sellers. In person, out loud. Agree on a price.' },
   { emoji: '🤝', title: 'Tap “I made a deal”', body: 'One of you picks the other + types the price. They tap confirm. Ka-ching.' },
 ];

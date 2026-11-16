@@ -512,11 +512,7 @@ export class Room {
     if (ra === this.roleOf(b!)) fail(`${b!.name} is also a ${ra}. Find a ${flip(ra)}!`);
     const lim = this.limitOf(a!.id);
     if (lim == null) fail('Waiting for your card.');
-    const mine = profitFor(ra, lim!, price);
-    if (mine < 0)
-      fail(ra === 'buyer'
-        ? `You'd lose $${(-mine).toFixed(2)}: your card says pay at most $${lim!.toFixed(2)}.`
-        : `You'd lose $${(-mine).toFixed(2)}: your card says sell for at least $${lim!.toFixed(2)}.`);
+    // Losing trades are allowed: the phone warns in red, but it's the trader's call.
     // replace any outgoing offer
     for (const pr of this.d.proposals.filter((x) => x.from === from))
       this.fx({ kind: 'declined', id: pr.id, by: from, reason: 'withdrawn' }, [pr.to]);
@@ -555,12 +551,6 @@ export class Room {
       if (lb == null || ls == null) fail('A card just expired — deal off.');
       const bp = profitFor('buyer', lb!, pr!.price);
       const sp = profitFor('seller', ls!, pr!.price);
-      if (bp < 0 || sp < 0) {
-        const loser = bp < 0 ? buyer : seller;
-        fail(loser.id === by
-          ? `That deal would lose you $${Math.abs(bp < 0 ? bp : sp).toFixed(2)}, so it's blocked.`
-          : `The market moved: that price would now lose ${loser.name} money. Deal off.`);
-      }
       const t = round2(this.clockMs(r!) / 1000);
       const print: Print = {
         id: this.env.id().slice(0, 8), t, price: pr!.price, buyer: buyer.id, seller: seller.id, bp, sp, hype: this.shift(r!),

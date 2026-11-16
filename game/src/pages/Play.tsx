@@ -424,7 +424,7 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
           >
             <div className="card-top">
               <span className="card-role">{me.role === 'buyer' ? "YOU'RE BUYING" : "YOU'RE SELLING"}</span>
-              <span className="muted small">{me.role === 'buyer' ? "don't pay more than" : "don't sell for less than"}</span>
+              <span className="muted small">{me.role === 'buyer' ? 'profit if you pay less than' : 'profit if you sell above'}</span>
             </div>
             <Money value={limit} className="card-limit" />
             <div className="card-tip">
@@ -554,7 +554,7 @@ function DealSheet({ room, view, limit, onClose }: { room: Room; view: View; lim
               ) : prof >= 0 ? (
                 <>Your profit {signed(prof)}</>
               ) : (
-                <>✗ You'd lose {money(-prof)}. Not allowed.</>
+                <>⚠️ You'd LOSE {money(-prof)} on this</>
               )}
             </div>
             <div className="keypad">
@@ -565,7 +565,7 @@ function DealSheet({ room, view, limit, onClose }: { room: Room; view: View; lim
               ))}
             </div>
             {err && <div className="err">{err}</div>}
-            <button className="btn primary huge-btn" disabled={busy || !price || prof == null || prof < 0 || p < 1} onClick={submit}>
+            <button className="btn primary huge-btn" disabled={busy || !price || prof == null || p < 1} onClick={submit}>
               {busy ? 'Sending…' : `Send to ${who.name} →`}
             </button>
           </>
@@ -623,7 +623,7 @@ function Incoming({ room, view }: { room: Room; view: View }) {
           </div>
           <div className="inc-price mono">{money(pr.price)}</div>
           <div className={`profit-preview big ${prof >= 0 ? 'up' : 'down'}`}>
-            {prof >= 0 ? <>Your profit {signed(prof)}</> : <>✗ You'd lose {money(-prof)}. Hit Nope.</>}
+            {prof >= 0 ? <>Your profit {signed(prof)}</> : <>⚠️ You'd LOSE {money(-prof)} on this</>}
           </div>
           <div className="inc-timer">
             <div style={{ width: `${(left / 20000) * 100}%` }} />
@@ -633,7 +633,7 @@ function Incoming({ room, view }: { room: Room; view: View }) {
             <button className="btn ghost" disabled={busy} onClick={() => answer(false)}>
               ✗ Nope
             </button>
-            <button className="btn primary" disabled={busy || prof < 0} onClick={() => answer(true)}>
+            <button className={`btn ${prof < 0 ? 'danger-soft' : 'primary'}`} disabled={busy} onClick={() => answer(true)}>
               ✓ CONFIRM
             </button>
           </div>
