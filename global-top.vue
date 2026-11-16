@@ -111,7 +111,6 @@ const logoUrl = (f: string) => `${import.meta.env.BASE_URL}logos/${f}`
     <div class="cb-track">
       <div v-for="k in 2" :key="k" class="cb-seg">
         <span v-for="q in quotes" :key="q.t + k" class="cb-q">
-          <span class="cb-r">#{{ q.r }}</span>
           <img class="cb-logo" :src="logoUrl(q.logo)" alt="" />
           <b>{{ q.t }}</b>
           <span class="cb-p">{{ q.p }}</span>
@@ -153,10 +152,6 @@ const logoUrl = (f: string) => `${import.meta.env.BASE_URL}logos/${f}`
 }
 .cb-q {
   align-items: center;
-}
-.cb-r {
-  color: #8fa898;
-  font-weight: 500;
 }
 .cb-logo {
   width: 16px;
