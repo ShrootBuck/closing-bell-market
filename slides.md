@@ -145,26 +145,15 @@ $$
 
 <div class="reveal-lines">
 
-$$ {hide|1|1-2|1-3|all}
+$$ {hide|1|1-2|1-3|1-4|all}
 \begin{aligned}
 p' &= \lambda(q_d-q_s)\\
    &= \lambda\big[d_0+s_0-(d_1+s_1)p\big]\\
-   &= \lambda\big[\underbrace{(d_1+s_1)p^*}_{d_0+s_0}-(d_1+s_1)p\big]\\
+   &= \lambda\left[(d_1+s_1)\cdot\frac{d_0+s_0}{d_1+s_1}-(d_1+s_1)p\right]\\
+   &= \lambda\big[(d_1+s_1)p^*-(d_1+s_1)p\big]\\
    &= -\lambda(d_1+s_1)(p-p^*).
 \end{aligned}
 $$
-
-</div>
-
-<div v-click>
-
-Set $x=p-p^*$ and $c=-\lambda(d_1+s_1)$. Then $x'=cx$.
-
-</div>
-
-<div v-click class="result">
-
-$x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
 
 </div>
 
@@ -184,15 +173,34 @@ $x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
 - "When we subtract supply, the minus s0 flips to plus s0, and the p terms group together."
 - "So the imbalance is d0 plus s0, minus d1 plus s1 times p."
 
-[click] **Line 3 appears — point at the underbrace.**
-- "Here's the trick. From the last slide, p star is d0 plus s0 over d1 plus s1."
-- "Multiply both sides by d1 plus s1: d0 plus s0 is the same thing as d1 plus s1 times p star. That's what the brace says. Swap it in."
+[click] **Line 3 appears — point at the fraction.**
+- "Here's the trick. Multiply and divide d0 plus s0 by d1 plus s1. Nothing changes, the d1 plus s1 cancels."
+- "But look at that fraction: d0 plus s0 over d1 plus s1. That's exactly p star from the last slide."
 
-[click] **Line 4 appears — point at (p − p*).**
+[click] **Line 4 appears — point at (d1 + s1)p*.**
+- "So swap the fraction for p star."
+
+[click] **Line 5 appears — point at (p − p*).**
 - "Both terms have d1 plus s1 in them, so factor it out, and pull the minus sign to the front."
 - "Now the price only cares about one thing: how far it is from p star. That's the gap, p minus p star."
+-->
 
-[click] **"Set x = p − p*…" appears — point at x and c.**
+---
+
+<div class="tag">Part A</div>
+
+# Price adjustment
+
+Set $x=p-p^*$ and $c=-\lambda(d_1+s_1)$. Then $x'=cx$.
+
+<div v-click class="result">
+
+$x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
+
+</div>
+
+<!--
+**Last slide ended with p′ = −λ(d1 + s1)(p − p*). Point at x and c.**
 - "Let's give the gap a name: x. x is just the distance from equilibrium."
 - "p star never changes, so the gap changes exactly as fast as the price does."
 - "And all the constants out front, call that one number c. Lambda, d1, s1 are all positive, so c is negative. Remember that, it's the whole story."
