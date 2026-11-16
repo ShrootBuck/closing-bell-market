@@ -728,7 +728,7 @@ Find someone on the other side, haggle, and report the deal. They confirm. Befor
 
 <div class="tag">Closing Bell · Desk recap</div>
 
-# Did your class match the math?
+# Did our class match the math?
 
 | First half · Blue chip | Second half · Meme mode |
 |---|---|
