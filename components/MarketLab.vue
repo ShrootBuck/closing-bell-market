@@ -1,11 +1,29 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { onSlideEnter, useIsSlideActive } from '@slidev/client'
 const active = useIsSlideActive()
 const animationKey = ref(0)
 onSlideEnter(() => animationKey.value++)
 const props = defineProps<{ mode: 'supply' | 'stable' | 'unstable' | 'example' }>()
 const price = ref(4), speed = ref(.5), expectations = ref(10), wide = ref(false)
+// Mirror the controls between tabs (presenter view <-> the projected slides),
+// the same way Slidev mirrors the slide number in a static build.
+if (typeof BroadcastChannel !== 'undefined') {
+  const channel = new BroadcastChannel('market-lab-' + props.mode)
+  const controls = { price, speed, expectations, wide, animationKey }
+  type Key = keyof typeof controls
+  const snapshot = () => Object.fromEntries(Object.entries(controls).map(([k, r]) => [k, r.value]))
+  let applying = false
+  channel.onmessage = ({ data }) => {
+    if (data === 'hello') return channel.postMessage(snapshot())
+    applying = true
+    for (const k of Object.keys(controls) as Key[]) if (k in data) (controls[k] as { value: unknown }).value = data[k]
+    applying = false
+  }
+  watch(Object.values(controls), () => { if (!applying) channel.postMessage(snapshot()) }, { flush: 'sync' })
+  channel.postMessage('hello') // a tab opened later picks up where the other one is
+  onBeforeUnmount(() => channel.close())
+}
 const equilibrium = computed(() => props.mode === 'supply' ? 6 : props.mode === 'example' ? 50 / 3 : 10)
 const demand = computed(() => 10 - price.value)
 const supply = computed(() => -2 + price.value)
