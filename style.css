@@ -77,6 +77,10 @@
 .slidev-layout .result.expect-note p{margin:0}
 .slidev-layout .big-eqs .katex-display,.slidev-layout .big-eqs .katex-display>.katex{text-align:center}
 
+/* A slide with a lot of working: tighter spacing between display lines. */
+.slidev-layout.compact .katex-display{margin:5px 0}
+.slidev-layout.compact .result{margin-top:12px}
+
 /* Part E: the given demand and supply, set off above the working. */
 .slidev-layout .givens .katex-display{margin:6px 0}
 

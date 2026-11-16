@@ -521,6 +521,8 @@ Below equilibrium → price falls.
 -->
 
 ---
+class: compact
+---
 
 <div class="tag">Part E · Starting at five dollars</div>
 
@@ -545,22 +547,25 @@ $$
 <div v-click>
 
 $$
-p^*=\frac{50}{3},\qquad p_0-p^*=5-\frac{50}{3}=-\frac{35}{3}.
+p'=\frac{3}{10}\left(p-\frac{50}{3}\right)=k(p-p^*)\quad\Rightarrow\quad k=\frac{3}{10},\quad p^*=\frac{50}{3}
 $$
 
 </div>
 
-<div v-click>
+<div class="reveal-lines">
 
-$$
-p(t)=\frac{50}{3}-\frac{35}{3}e^{3t/10}
+$$ {hide|1|all}
+\begin{aligned}
+p(t) &= p^*+(p_0-p^*)e^{kt}\\
+&= \frac{50}{3}+\left(5-\frac{50}{3}\right)e^{3t/10}=\frac{50}{3}-\frac{35}{3}e^{3t/10}
+\end{aligned}
 $$
 
 </div>
 
 <div v-click class="result">
 
-At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
+At month ten, $p(10)=(50-35e^3)/3\approx-\$217.66$.
 
 </div>
 
@@ -574,12 +579,16 @@ At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
 - "Market clearing again, so set q_d equal to q_s. Move the p prime terms left: 4 plus 6 is 10 p prime."
 - "Move the p terms right: p plus 2p is 3p. And 30 plus 20 is 50."
 
-[click] **p* and the starting gap appear — point at p* = 50/3.**
-- "Equilibrium is when p prime is zero. 3p equals 50, so p star is 50 over 3. About sixteen sixty-seven."
-- "We start at five. That's 35 over 3 below equilibrium. About eleven sixty-seven under."
+[click] **Where p* and k come from.**
+- "Divide by 10 and factor out 3 over 10. Now it looks exactly like Part C: p prime equals k times p minus p star."
+- "So we can just read them off: k is 3 over 10, and p star is 50 over 3. About sixteen sixty-seven."
 
-[click] **p(t) appears.**
-- "k is 3 over 10. So the price is p star minus 35 over 3 times e to the 3t over 10."
+[click] **The general solution appears.**
+- "We already solved this equation in Part C. No need to solve it again. The answer is p star plus the starting gap times e to the k t."
+
+[click] **Plug in the numbers.**
+- "So we just plug in constants: p star is 50 over 3, p0 is 5, k is 3 over 10."
+- "We start at five, which is 35 over 3 below equilibrium. About eleven sixty-seven under."
 - "Starting below and k is positive. Which way does it go?" (Down, and faster and faster.)
 
 [click] **The answer pops up.**
