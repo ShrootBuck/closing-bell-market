@@ -29,7 +29,20 @@ const basePath = import.meta.env.BASE_URL
 </script>
 
 <!--
-Suppose a market has an equilibrium price of ten dollars, but the current price is nine dollars. Will the price rise toward ten dollars, or keep falling? We’ll compare two models that give different answers. In the first, prices respond to excess demand. In the second, buyers and sellers also respond to whether the price is rising or falling. Both models have the same equilibrium price. We’ll solve their differential equations to see what happens over time, then play a trading game.
+**The hook — ask the room, don't explain yet.**
+- "Quick question. Say the right price for something is ten dollars, but right now it's selling for nine. What happens next? Does it climb back to ten, or keep sliding?"
+- Let a couple people answer. Most will say it goes back up.
+
+**Then set up the talk.**
+- "Turns out it depends on how people behave. We're going to look at two models of a market."
+- "Model one: prices just react to whether there are too many buyers or too many sellers."
+- "Model two: people also watch the trend. If the price is going up, they act on that."
+- "Both models agree on the 'right' price. But one pulls the price back, and the other pushes it away. That's the whole talk."
+
+**Point at the picture.**
+- "The green path settles at the dashed line. The gold one falls away. By the end you'll know exactly which equation makes which."
+
+**Close the intro:** "We'll do the math, then you're going to trade it yourselves on your phones."
 -->
 
 ---
@@ -60,7 +73,28 @@ Move the price above and below the crossing.
 </div><MarketLab mode="supply" /></div>
 
 <!--
-The subscripts d and s stand for demand and supply. A higher price reduces the quantity buyers want and increases the quantity sellers offer. In this graph, demand is ten minus the price and supply is the price minus two. They match at six dollars. At four dollars, buyers want six units and sellers offer two. That leaves four units of excess demand. Move the price to eight dollars and the imbalance reverses. The first model uses that imbalance to determine how the price moves.
+**The big idea:** buyers want less when it's expensive, sellers offer more when it's expensive. Where those meet is the equilibrium price, p star.
+
+**Point at q_d = d0 − d1 p.**
+- "q d is how much buyers want. d for demand."
+- "d0 is how much they'd want if it were free. Every dollar the price goes up, they want d1 less. That's why it's minus."
+
+**Point at q_s = −s0 + s1 p.**
+- "q s is how much sellers offer. s for supply."
+- "Every dollar the price goes up, sellers offer s1 more. That's why it's plus."
+
+**Point at the p* formula.**
+- "Equilibrium is where those are equal. Set them equal and solve for p, and you get p star equals d0 plus s0 over d1 plus s1."
+- "That's the price where every buyer who wants one finds a seller."
+
+**Now drag the slider (Posted price) — this is the fun part.**
+- Start at 6: "Here, demand and supply are both 4. Quantities match, price holds. That's p star equals 6."
+- Drag to 4: "At four dollars, buyers want 6 but sellers only offer 2. Four extra buyers fighting over too few units. What's the price going to do?" (Up.)
+- Drag to 8: "At eight it flips. Sellers offer 6, buyers want 2. Too much stuff. Price falls."
+
+**Bridge to the next slide:** "So the gap between demand and supply tells us which way the price should move. The first model turns that into an equation."
+
+**If anyone looks lost:** "Think concert tickets. Cheap tickets, everybody wants one, they sell out, price goes up. Overpriced, nobody buys, price comes down."
 -->
 
 ---
@@ -138,7 +172,29 @@ The gap keeps its sign as it shrinks.
 
 
 <!--
-Move the speed slider. All four paths still approach ten dollars, but they get there at different speeds. Pick any starting price. Its distance from equilibrium gets multiplied by the same shrinking exponential. A price above the line falls. A price below the line rises. Neither crosses the line because the exponential stays positive. If we start exactly on the line, the gap is zero forever. That word every is what makes this equilibrium globally stable.
+**The big idea:** in model one, every starting price comes back to p star. That's what "globally stable" means.
+
+**Point at "c < 0, e^{ct} shrinks to zero."**
+- "Remember c is negative. e to a negative number times t gets smaller and smaller. It goes to zero."
+- "And the gap is the starting gap times that shrinking number. So the gap goes to zero too."
+
+**Point at the limit.**
+- "That's all this line says: wait long enough, and the price ends up at p star."
+
+**Point at the graph.**
+- "Here are four different starting prices. Two above ten, two below. Every single one ends up at ten."
+- Hit **Replay paths** so they watch it happen.
+
+**Drag the Speed slider.**
+- "This slider is how fast prices react, lambda times d1 plus s1."
+- Slide it up: "Faster reaction, they snap back quicker." Slide it down: "Slower, but they still get there."
+- Point at the caption: "It even tells you: half the gap closes every so many time units. That's a half-life, same as radioactive decay."
+
+**Point at "the gap keeps its sign."**
+- "Notice none of the lines cross the dashed line. Start above, you come down to it. Start below, you come up to it. You never overshoot. e to anything is positive, so the gap never flips sign."
+- Point at the arrows under the graph: "Both arrows point at p star. Everything flows in."
+
+**The word to land:** "Every starting price returns. That word every is what makes it globally stable."
 -->
 
 ---
@@ -160,7 +216,25 @@ Require $q_d=q_s$ at every instant. What slope $p'$ makes that possible?
 </div>
 
 <!--
-In the second model, people use the current price trend to anticipate where the price is going. Imagine learning that the price of a concert ticket is going up. You have a reason to buy today. Someone holding a spare ticket has a reason to wait. Those two decisions explain the opposite signs on the derivative terms. We now require every unit demanded to match a unit supplied at each instant. The equation we solve comes from that requirement.
+**The big idea:** now people react to the trend, not just the price. If the price is rising, buyers rush in and sellers hold out.
+
+**Set it up with a story first.**
+- "Imagine you find out concert ticket prices are going up next week. What do you do?" (Buy now.)
+- "And if you're holding a spare ticket and you know prices are rising?" (Wait, sell later for more.)
+
+**Point at the new d2 p′ term in q_d.**
+- "So demand gets a new piece: plus d2 times p prime. p prime is how fast the price is rising."
+- "Price rising means p prime is positive, so buyers want more right now. They're buying before it gets pricier."
+
+**Point at the − s2 p′ term in q_s.**
+- "Supply gets minus s2 times p prime. Price rising, sellers offer less right now. They're holding out for a better price."
+- "Opposite signs because buyers and sellers react in opposite ways."
+
+**Point at the box.**
+- "Now here's the rule for this model: the market always clears. Every unit someone wants to buy matches a unit someone sells, at every instant."
+- "So the question is: how fast does the price have to be moving for that to work out? That's the next slide."
+
+**If anyone looks lost:** "It's the same supply and demand, plus FOMO. People watch the chart."
 -->
 
 ---
@@ -184,7 +258,28 @@ Using $x=p-p^*$ again gives $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
 </div>
 
 <!--
-Move both derivative terms to the left. On the right the price terms are positive and the intercept terms are negative. Factoring out the sum of the price slopes leaves the same gap we saw earlier. We can reuse the exponential solution immediately. The sign has changed. Below equilibrium, for example, ordinary demand would exceed supply. A falling price makes buyers wait and brings more supply forward. That negative slope is precisely what allows the market to clear.
+**The big idea:** do the same algebra as model one, and the sign flips. That one sign changes everything.
+
+**Line 1 — point at the top equation.**
+- "We just set demand equal to supply. Left side is demand, right side is supply, both with the new trend terms."
+
+**Line 2 — point at (d2 + s2)p′.**
+- "Move all the p prime terms to the left. d2 p prime and plus s2 p prime, so d2 plus s2 times p prime."
+- "Move the plain p terms to the right. Those become d1 plus s1 times p, minus d0 plus s0."
+
+**Line 3 — point at p′ = k(p − p*).**
+- "Divide both sides by d2 plus s2. And the same trick as before: d0 plus s0 is d1 plus s1 times p star."
+- "So p prime equals k times p minus p star. k is d1 plus s1 over d2 plus s2."
+- "Everything in k is positive, so k is positive."
+
+**Stop and compare out loud.**
+- "Model one was p prime equals c times the gap, with c negative. This is p prime equals k times the gap, with k positive. Same shape, opposite sign."
+
+[click] **The answer pops up.**
+- "Same equation type as before, so same exponential solution. p star plus the starting gap times e to the k t."
+- "Only now k is positive, so e to the k t grows."
+
+**Why the sign makes sense:** "Say price is below p star. Normally buyers would outnumber sellers. For the market to still clear, the price has to be falling: falling prices make buyers wait and sellers dump. So below p star, the price falls. It runs away."
 -->
 
 ---
@@ -205,7 +300,26 @@ Only $p_0=p^*$ gives a constant path.
 
 
 <!--
-Yes. Every point on both curves satisfies demand equals supply. But pick a starting price even slightly above the star, and the positive gap grows exponentially. Start slightly below, and the gap becomes increasingly negative. Either curve is a counterexample to the claim that every clearing path converges. The equilibrium itself is unstable. Now increase the trend reaction slider. Since that sum is in the denominator of k, the paths move away more slowly. They still move away.
+**The big idea:** yes. The market clears at every instant and still runs away from equilibrium. That's an unstable equilibrium.
+
+**Point at "k > 0, so e^{kt} grows."**
+- "k is positive, so e to the k t gets bigger and bigger. The gap blows up."
+
+**Point at the two bullets.**
+- "Start above p star, the price keeps rising. Start below, it keeps falling."
+- "The only way to stay put is to start exactly at p star. Any tiny nudge and you're gone."
+
+**Point at the graph. Hit Replay paths.**
+- "These start really close to ten. Ten and a half, nine and a half. Watch."
+- "They hang around for a bit, then take off. The ones above go up, the ones below go down."
+- Point at the arrows under the graph: "Compare to the last graph. Before, both arrows pointed in. Now they point out."
+
+**Drag the Trend reaction slider.**
+- "This is d2 plus s2, how strongly people react to the trend. It's on the bottom of k."
+- Slide it up: "React more strongly, the paths move away more slowly." Slide it down: "Faster."
+- "But no setting makes them come back. They always run away. Only the speed changes."
+
+**The line to land:** "Supply equals demand at every point on these curves. The market clears the whole time. And it still drifts away. Equilibrium doesn't mean stable."
 -->
 
 ---
@@ -240,7 +354,22 @@ Below equilibrium → price falls.
 </div></div>
 
 <!--
-Think of equilibrium as the ball's resting position. In the valley, a small push sends the ball back toward the bottom. On the hilltop, a small push sends it farther away. The price equations describe those same two directions of motion. For the first equation, the minus sign reverses the direction of the price gap. For the second, the positive coefficient preserves it. These pictures illustrate stability. Our price equations are first order, so they do not include a physical ball's inertia or bouncing.
+**The big idea:** a valley versus a hilltop. Same flat spot, opposite behavior.
+
+**Before clicking:** "Here's the picture to remember both models."
+
+[click] **The valley appears (price adjustment).**
+- "Equilibrium is the bottom of a valley. Push the ball a little, it rolls back down."
+- "That's model one. Price above p star, it falls. Below, it rises. The minus sign flips the direction back toward p star."
+
+[click] **The hilltop appears (expectations).**
+- "Now equilibrium is the top of a hill. The ball can sit there perfectly balanced."
+- "But push it even a little and it rolls away. That's model two. The plus sign keeps pushing in the direction it's already going."
+
+**Tie it together.**
+- "Both have a resting spot at p star. The sign of the coefficient decides valley or hill."
+
+**Honesty note if someone asks:** "A real ball overshoots and bounces. Our equations are first order, so no bouncing. The picture is just about which direction a push sends you."
 -->
 
 ---
@@ -268,7 +397,29 @@ At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
 </div>
 
 <!--
-Time is measured in months. Collect the four and six derivative terms and we get ten times the price derivative on the left. Setting that derivative to zero gives about sixteen dollars and sixty-seven cents. We start at just five dollars, already well below equilibrium. Substituting ten months puts a three in the exponent. The negative starting gap has grown by a factor of about twenty, giving a strikingly negative price.
+**The big idea:** plug in real numbers and the unstable model predicts something wild: a negative price.
+
+**Set up the problem.**
+- "Here's the exercise. Time is in months. Demand is 30 minus 2p plus 4 p prime. Supply is minus 20 plus p minus 6 p prime. Price starts at five dollars."
+
+**Line 1 — point at 10p′ = 3p − 50.**
+- "Set them equal. Move the p prime terms left: 4 plus 6 is 10 p prime."
+- "Move the p terms right: p plus 2p is 3p. And 30 plus 20 is 50."
+
+**Line 2 — point at p* = 50/3.**
+- "Equilibrium is when p prime is zero. 3p equals 50, so p star is 50 over 3. About sixteen sixty-seven."
+- "We start at five. That's 35 over 3 below equilibrium. About eleven sixty-seven under."
+
+**Line 3 — point at p(t).**
+- "k is 3 over 10. So the price is p star minus 35 over 3 times e to the 3t over 10."
+- "Starting below and k is positive. Which way does it go?" (Down, and faster and faster.)
+
+[click] **The answer pops up.**
+- "At month ten, plug in t equals 10. e to the 3 is about 20."
+- "So the price is about negative two hundred seventeen dollars. Negative."
+- Pause. "The gap started at about twelve dollars and grew twenty times."
+
+**If anyone asks how a price can be negative:** "It can't, really. That's the next slide: the model breaks down before then."
 -->
 
 ---
@@ -293,7 +444,25 @@ Both $p$ and $p'$ tend to $-\infty$.
 
 
 <!--
-Differentiate the price path. The slope is already negative and gets more negative every month. Buyers expecting a bigger drop have a stronger incentive to wait. Sellers have a stronger incentive to sell now. Those effects are relative to what they would do at the same price with no trend. To find when the price reaches zero, set the exponential equal to fifty over thirty-five and take a logarithm. That gives about one point one nine months. If this product requires a nonnegative price, the model has already left its useful range long before month ten.
+**The big idea:** the price doesn't just fall, it falls faster and faster, and it hits zero in about a month.
+
+**Point at p′(t) = −3.5 e^{0.3t}.**
+- "Take the derivative of our price path. That's how fast the price is changing."
+- "At the start, t is zero, so it's minus three fifty a month."
+- "By month ten it's about minus seventy dollars a month. The drop keeps speeding up."
+
+**Point at "both p and p′ go to minus infinity."**
+- "Both the price and its speed head to negative infinity. No floor."
+
+**Use the graph buttons.**
+- Click **First 2.5 months**: "Here's the start. Watch it cross zero."
+- Point at the caption: "It hits zero at about 1.19 months. That's when e to the 0.3 t equals 50 over 35. Take a log and you get that."
+- Click **First 10 months**: "Zoom out and it's a cliff. Negative two seventeen by month ten."
+
+**Why it accelerates (the people story).**
+- "Buyers expect a bigger drop, so they wait even longer. Sellers want out before the next drop, so they dump even harder. Each month the reasons get stronger."
+
+**The honest takeaway:** "Real prices can't go below zero. So this model stops being useful after about a month. But the instability is real. That's what a crash looks like."
 -->
 
 ---
@@ -315,7 +484,28 @@ Differentiate the price path. The slope is already negative and gets more negati
 At the same price, buyers demand less and sellers supply more than they would without the trend terms.
 
 <!--
-Suppose the price is falling. Buyers can wait for a better deal, which reduces demand through the four times p prime term. Sellers want to sell before the next drop, which increases supply through minus six times p prime. Those are comparisons at the same price. Along the full path, the falling price also attracts buyers, so the total quantity traded can still increase. The clearing equation combines all those effects. It gives a negative slope that becomes more negative as the price moves farther below equilibrium.
+**The big idea:** when the price falls, both buyers and sellers make it fall more. That's the feedback loop.
+
+**Before clicking:** "Let's trace why the fall speeds up."
+
+[click] **"Price falls, p′ < 0."**
+- "Say the price is falling. So p prime is negative."
+
+[click] **"Buyers wait, 4p′ < 0."**
+- "In the demand equation there's plus 4 p prime. p prime is negative, so that term is negative."
+- "Translation: buyers want less right now. Why buy today if it'll be cheaper tomorrow?"
+
+[click] **"Sellers sell now, −6p′ > 0."**
+- "In supply there's minus 6 p prime. Negative times negative is positive."
+- "Translation: sellers offer more right now. Get out before it drops more."
+
+[click] **"Both favor a further decline."**
+- "Fewer buyers, more sellers. Both push the price down even more. Which makes p prime more negative. Which makes both effects stronger."
+- "That's the loop. That's why it accelerates."
+
+**Careful point if someone pushes back:** "This is compared to the same price with no trend. As the price gets really low, some buyers do jump in. The equation adds all that up, and the total still says: keep falling."
+
+**Bridge to the game:** "You're about to feel this loop for real."
 -->
 
 ---
@@ -328,14 +518,33 @@ Scan the code on the projector. You get a secret card and a role.
 
 | Buyer | Seller |
 |---|---|
-| Never pay more than your limit. Profit = limit − price. | Never sell below your floor. Profit = price − floor. |
+| Pay less than your card. Profit = card − price. | Sell for more than your card. Profit = price − card. |
 
-Find someone on the other side, haggle, and report the deal. They confirm. Before each round, predict the close: within $10 earns a bonus.
+Find someone on the other side, haggle, and report the deal. They confirm. Before each round, call it: will the gap to the fair price shrink or grow? First up: a 45-second practice round.
 
 <div class="result"><a href="https://market.zaydkrunz.com/" target="_blank">Open the trading floor ↗</a></div>
 
 <!--
-Get your phones out. Scan the code and pick a trader name. Half of you are buyers and half are sellers. Your card is private. Buyers, it's the most you can pay. Sellers, it's the least you'll take. Walk around, haggle out loud, and when you agree on a price, one of you reports it and the other confirms. The app blocks any trade that loses you money. Cards expire, so trade or lose them. Before each round the projector shows the demand and supply equations. Use them to predict the closing price for bonus money. At halftime, buyers and sellers swap, and the market changes: your card starts moving with the chart. Most money on the Rich List at the end wins.
+**The big idea:** get everyone on their phones and trading fast. Keep it short; the app's how-to screen does the teaching.
+
+**Get them in.**
+- "Phones out. Scan the code on the screen, or go to the site and type the PIN. Pick a name and an animal."
+- Wait until the lobby has everyone. Start the game.
+
+**Talk over the How to Play screen (20 seconds).**
+- "Half of you are buyers, half sellers. Your card has a secret number."
+- "Buyers: pay less than your number and you profit. Sellers: sell for more than your number."
+- "Find someone on the other side. Out loud, in person, haggle."
+- "When you agree, one of you taps I made a deal, picks the other person, types the price. They hit confirm. Ka-ching."
+- "You get a new card after every deal, so keep going. Cards also expire, so use them."
+
+**Practice round.**
+- "First a 45-second practice round. It doesn't count. Everyone just make one deal."
+- After: the screen shows who hasn't traded. Help them.
+
+**Before round 1:** "Every round, before the bell, make the call on your phone: will the gap to the fair price shrink or grow? Right call is 25 bucks. Most money at the end wins."
+
+**At halftime the app explains meme mode. Just read the loop off the screen:** "Everyone watches the chart. Your card follows the trend. Higher cards mean higher deals. It feeds itself."
 -->
 
 ---
@@ -350,7 +559,23 @@ Get your phones out. Scan the code and pick a trader name. Half of you are buyer
 | The opening gap shrank toward $p^*$. | A small push turned into a bubble. |
 
 <!--
-The results screen fit an exponential to every round of your trades. In the first half, your fitted rate was negative: the gap from equilibrium decayed, just like the price-adjustment model. That gives us an estimate of your class's lambda. In the second half, the only change was that each card moved with the price trend. That's the d2 and s2 terms from part C. The fitted rate turned positive, and a five-dollar push in the pre-market kept growing until it burst. Same supply and demand, same equilibrium price, opposite stability.
+**The big idea:** point at the results screens and connect them back to the two equations.
+
+**First half (blue chip).**
+- "In the first half, every round opened way off the fair price. And it drifted back. The gap shrank."
+- "That's model one. p prime equals minus lambda times the gap."
+- "The app fit an exponential to your actual trades. The rate came out negative, just like c. That number is your class's lambda, how fast you all reacted."
+
+**Second half (meme mode).**
+- "In the second half, I changed one thing. Your cards moved with the price trend."
+- "That's exactly the d2 and s2 terms from Part C. Buyers FOMO in, sellers hold out."
+- "And a tiny push in the pre-market turned into a bubble. The fitted rate went positive. That's k."
+
+**Ask the room.**
+- "Who called GROW at halftime? Who got burned calling SHRINK?"
+- "Winners, what was your strategy in meme mode?"
+
+**The line to land:** "Same supply and demand. Same fair price. Opposite sign. One market settles, the other one runs away."
 -->
 
 ---
@@ -370,5 +595,19 @@ $$
 
 
 <!--
-Think back to the moment the background desks switched strategies. In the homework, a change in how buyers and sellers respond also flips the sign on the price gap. Both models give exactly the same price when the derivative is zero. To predict what happens after a shock, we need the equation for how the price moves.
+**The big idea, one last time:** the equilibrium price is the same in both models. What decides whether a shock fades or grows is the sign in front of the gap.
+
+**Point at the top line (price adjustment).**
+- "Model one. The gap times e to minus lambda d1 plus s1 t. Negative exponent. The gap shrinks. Stable."
+
+**Point at the bottom line (expectations).**
+- "Model two. The gap times e to the k t. Positive exponent. The gap grows. Unstable."
+
+**Point at the box.**
+- "Both models give the same p star. If you only solved for where the curves cross, you'd think they're the same market."
+- "They're not. To know what happens after a shock, you need the equation for how the price moves."
+
+**Tie to the game:** "You saw it. First half you pulled the price back. Second half the exact same market, plus one feedback loop, and it ran away."
+
+**Close:** "Thanks. Questions?"
 -->
