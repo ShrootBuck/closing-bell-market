@@ -59,6 +59,14 @@
 .slidev-layout.continued .katex-display{margin:4px 0}
 .slidev-layout.continued p{margin:8px 0}
 .slidev-layout.continued .result{margin-top:12px}
+/* Slide 4: a = λ(d1+s1) moves to the corner on click 1; the integrating-factor
+   line takes the sentence's spot for one click. */
+.slidev-layout .a-corner{position:absolute;top:100px;right:54px;font-size:22px;line-height:1.45}
+.slidev-layout .a-corner .ghost{visibility:hidden;display:inline-block}
+.slidev-layout .a-corner p{margin:0}
+.slidev-layout .swap-line{position:relative}
+.slidev-layout .swap-over{position:absolute;inset:0}
+.slidev-layout .swap-over:not(.slidev-vclick-hidden){transition-delay:.8s}
 .slidev-layout .after-glide{animation:panel-arrive .6s 1.3s ease both}
 @media(prefers-reduced-motion:reduce){.slidev-layout .after-glide{animation:none}}
 

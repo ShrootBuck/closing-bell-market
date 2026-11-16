@@ -205,10 +205,21 @@ $$
 
 </GlideFrom></div>
 
-<div class="after-glide">
+<div class="a-corner">
 
-Let $a=\lambda(d_1+s_1)>0$, so $p'=-a(p-p^*)$. Multiply by the integrating factor $e^{at}$.
+<span class="ghost">$a=\lambda(d_1+s_1)>0$</span>
 
+</div>
+
+<div class="after-glide swap-line">
+
+<span v-click.hide="1">Let</span> <MoveOnClick :at="1" to=".a-corner .ghost">$a=\lambda(d_1+s_1)>0$</MoveOnClick><span v-click.hide="1">, so $p'=-a(p-p^*)$.</span>
+
+<div v-click="1" class="swap-over"><div v-click.hide="2">
+
+Multiply by the integrating factor $e^{at}$.
+
+</div></div>
 </div>
 
 <div class="reveal-lines">
@@ -235,12 +246,13 @@ $p(0)=p_0\;\Rightarrow\;C=p_0-p^*,\quad\text{so}\quad p(t)=p^*+(p_0-p^*)e^{-at}.
 **The last line of the previous slide, p′ = −λ(d1 + s1)(p − p*), glides up to the top. Then "Let a = …" fades in. Point at a.**
 - "All the constants out front, lambda times d1 plus s1, call that one number a. Lambda, d1, s1 are all positive, so a is positive. Remember that, it's the whole story."
 - "So p prime equals minus a times the gap."
+
+[click] **a = λ(d1 + s1) > 0 moves to the top-right corner. "Multiply by the integrating factor e^{at}" and line 1 appear.**
+- "I'll park a up in the corner so we can keep an eye on it."
+- "Distribute the minus a and move the p term to the left. Standard linear form: p prime plus a p equals a p star."
 - "This is a first-order linear equation, so we solve it with an integrating factor: e to the a t."
 
-[click] **Line 1 — point at p′ + ap = ap*.**
-- "Distribute the minus a and move the p term to the left. Standard linear form: p prime plus a p equals a p star."
-
-[click] **Line 2 — multiply through by e^{at}.**
+[click] **Line 2 — multiply through by e^{at}. The "Multiply by…" note goes away.**
 - "Multiply every term by e to the a t."
 
 [click] **Line 3 — point at (e^{at} p)′.**
