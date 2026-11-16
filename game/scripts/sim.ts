@@ -12,10 +12,13 @@ const env: Env = { now: () => t, rng, id: () => Math.floor(rng() * 2 ** 32).toSt
 const room = new Room(newRoomData('12345', 'tok', t, rng), env);
 const bots = Number(process.argv[3] ?? 16);
 room.host({ action: 'bots', count: bots });
+room.host({ action: 'settings', settings: { practice: false } });
 room.host({ action: 'start' });
+room.host({ action: 'next' });
 
 for (let i = 0; i < room.totalRounds; i++) {
   if (room.d.stage === 'swap') room.host({ action: 'next' });
+  if (room.d.stage !== 'briefing') room.host({ action: 'next' });
   room.host({ action: 'bell' });
   while (room.d.stage === 'trading') {
     t += 250;

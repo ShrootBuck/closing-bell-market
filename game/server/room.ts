@@ -40,6 +40,8 @@ export interface RoomData {
   signStart: 1 | -1;
   deskNext: number;
   seq: number;
+  practice?: RoundState | null;
+  inPractice?: boolean;
 }
 
 export interface Client {
@@ -79,14 +81,17 @@ export class Room {
   private botNext = new Map<string, number>();
   private botReplies: { id: string; at: number }[] = [];
 
-  constructor(public d: RoomData, private env: Env) {}
+  constructor(public d: RoomData, private env: Env) {
+    d.settings = { ...DEFAULT_SETTINGS, ...d.settings };
+  }
 
   // ---------- helpers ----------
   get now() {
     return this.env.now();
   }
   get round(): RoundState | null {
-    return ['briefing', 'trading', 'recap'].includes(this.d.stage) ? this.d.rounds[this.d.roundIndex] ?? null : null;
+    if (!['briefing', 'trading', 'recap'].includes(this.d.stage)) return null;
+    return (this.d.inPractice ? this.d.practice : this.d.rounds[this.d.roundIndex]) ?? null;
   }
   get totalRounds() {
     return this.d.settings.roundsPerPhase * 2;
@@ -97,7 +102,7 @@ export class Room {
   get phase(): 0 | 1 {
     if (this.d.stage === 'swap') return 1;
     if (this.d.stage === 'final') return 1;
-    if (this.d.stage === 'lobby') return 0;
+    if (this.d.stage === 'lobby' || this.d.stage === 'howto' || this.d.inPractice) return 0;
     return this.phaseOfIndex(this.d.roundIndex);
   }
   active() {
@@ -132,8 +137,10 @@ export class Room {
     return round2(p.profit + p.bonus);
   }
   ranks(): Record<string, number> {
-    const list = this.active().sort((a, b) => this.total(b) - this.total(a));
-    return Object.fromEntries(list.map((p, i) => [p.id, i + 1]));
+    const list = this.active();
+    if (list.every((p) => this.total(p) === 0)) return {}; // all tied at $0: no meaningful rank yet
+    const totals = list.map((p) => this.total(p));
+    return Object.fromEntries(list.map((p) => [p.id, 1 + totals.filter((t) => t > this.total(p)).length]));
   }
 
   touch() {
@@ -209,9 +216,32 @@ export class Room {
     }
     this.d.roundIndex = 0;
     this.d.rounds = [];
-    this.createRound(0);
+    this.d.practice = null;
+    this.d.inPractice = false;
+    this.d.stage = 'howto';
+    this.fx({ kind: 'stage', stage: 'howto' });
+  }
+
+  startPractice() {
+    let nb = 0;
+    let ns = 0;
+    for (const p of this.active()) this.roleOf(p) === 'buyer' ? nb++ : ns++;
+    const spec = genSpec({ index: -1, phase: 0, kind: 'stable', nb, ns, hype: this.d.settings.hype, sign: 1, rng: this.env.rng, used: [] });
+    spec.ticker = 'TEST';
+    spec.company = 'Practice Holdings Inc.';
+    spec.headline = 'Practice round. Nothing counts. Just make one deal!';
+    spec.open = [spec.pStar, spec.pStar, spec.pStar];
+    this.d.practice = this.newRoundState(spec, 45000);
+    this.d.inPractice = true;
     this.d.stage = 'briefing';
-    this.fx({ kind: 'stage', stage: 'briefing' });
+    this.bell();
+  }
+
+  newRoundState(spec: RoundSpec, durationMs: number): RoundState {
+    return {
+      spec, prints: [], result: null, elapsedMs: 0, runningSince: null, durationMs,
+      predictions: {}, roundProfit: {}, rankBefore: this.ranks(), momentum: 0,
+    };
   }
 
   createRound(i: number) {
@@ -229,11 +259,7 @@ export class Room {
       index: i, phase, kind, nb, ns, hype: this.d.settings.hype, sign, rng: this.env.rng,
       used: this.d.rounds.map((r) => r.spec.ticker),
     });
-    this.d.rounds[i] = {
-      spec, prints: [], result: null, elapsedMs: 0, runningSince: null,
-      durationMs: this.d.settings.roundSeconds * 1000, predictions: {}, roundProfit: {},
-      rankBefore: this.ranks(), momentum: 0,
-    };
+    this.d.rounds[i] = this.newRoundState(spec, this.d.settings.roundSeconds * 1000);
   }
 
   bell() {
@@ -286,11 +312,15 @@ export class Room {
     const close = closePrice(r.prints, durS);
     const pStar = r.spec.pStar;
     const leg = runawayLeg(r.prints, pStar);
-    const preds = Object.entries(r.predictions)
+    const gap0 = r.spec.open[r.spec.open.length - 1] - pStar;
+    const grew = Math.abs(close - pStar) > Math.abs(gap0);
+    const choice = this.d.settings.predictMode === 'choice';
+    const preds = Object.entries(this.d.inPractice ? {} : r.predictions)
       .filter(([id]) => this.player(id))
       .map(([id, guess]) => {
-        const err = round2(Math.abs(guess - close));
-        const bonus = predictionBonus(this.d.settings.predictBonus, err);
+        const right = (guess > 0) === grew;
+        const err = choice ? (right ? 0 : 1) : round2(Math.abs(guess - close));
+        const bonus = choice ? (right ? this.d.settings.predictBonus : 0) : predictionBonus(this.d.settings.predictBonus, err);
         const p = this.player(id)!;
         p.bonus = round2(p.bonus + bonus);
         p.predErr.push(err);
@@ -319,6 +349,7 @@ export class Room {
         .slice(0, 3)
         .map(([id, profit]) => ({ id, profit })),
       best,
+      grew,
     };
     this.d.proposals = [];
     this.d.cards = {};
@@ -331,11 +362,25 @@ export class Room {
     switch (this.d.stage) {
       case 'lobby':
         return this.start();
+      case 'howto':
+        if (this.d.settings.practice) return this.startPractice();
+        this.createRound(0);
+        this.d.stage = 'briefing';
+        this.fx({ kind: 'stage', stage: 'briefing' });
+        return;
       case 'briefing':
         return this.bell();
       case 'trading':
         return this.endRound();
       case 'recap': {
+        if (this.d.inPractice) {
+          this.d.inPractice = false;
+          this.d.roundIndex = 0;
+          this.createRound(0);
+          this.d.stage = 'briefing';
+          this.fx({ kind: 'stage', stage: 'briefing' });
+          return;
+        }
         const n = this.d.roundIndex + 1;
         if (n >= this.totalRounds) {
           this.d.stage = 'final';
@@ -413,6 +458,8 @@ export class Room {
         if (s.cardSeconds != null) S.cardSeconds = clamp(Math.round(s.cardSeconds), 10, 120);
         if (s.hype != null) S.hype = clamp(round2(s.hype), 0.25, 4);
         if (s.predictBonus != null) S.predictBonus = clamp(Math.round(s.predictBonus), 0, 200);
+        if (s.practice != null) S.practice = !!s.practice;
+        if (s.predictMode === 'choice' || s.predictMode === 'number') S.predictMode = s.predictMode;
         break;
       }
       case 'restart':
@@ -422,6 +469,8 @@ export class Room {
         }
         this.d.rounds = [];
         this.d.roundIndex = 0;
+        this.d.practice = null;
+        this.d.inPractice = false;
         this.d.cards = {};
         this.d.proposals = [];
         this.d.finalStep = 0;
@@ -466,8 +515,8 @@ export class Room {
     const mine = profitFor(ra, lim!, price);
     if (mine < 0)
       fail(ra === 'buyer'
-        ? `Irrational! Your limit is $${lim!.toFixed(2)} — you'd lose $${(-mine).toFixed(2)}.`
-        : `Irrational! Your floor is $${lim!.toFixed(2)} — you'd lose $${(-mine).toFixed(2)}.`);
+        ? `You'd lose $${(-mine).toFixed(2)}: your card says pay at most $${lim!.toFixed(2)}.`
+        : `You'd lose $${(-mine).toFixed(2)}: your card says sell for at least $${lim!.toFixed(2)}.`);
     // replace any outgoing offer
     for (const pr of this.d.proposals.filter((x) => x.from === from))
       this.fx({ kind: 'declined', id: pr.id, by: from, reason: 'withdrawn' }, [pr.to]);
@@ -509,7 +558,7 @@ export class Room {
       if (bp < 0 || sp < 0) {
         const loser = bp < 0 ? buyer : seller;
         fail(loser.id === by
-          ? `That deal would lose you $${Math.abs(bp < 0 ? bp : sp).toFixed(2)} now. Irrational — blocked.`
+          ? `That deal would lose you $${Math.abs(bp < 0 ? bp : sp).toFixed(2)}, so it's blocked.`
           : `The market moved: that price would now lose ${loser.name} money. Deal off.`);
       }
       const t = round2(this.clockMs(r!) / 1000);
@@ -519,10 +568,12 @@ export class Room {
       r!.prints.push(print);
       const ph = r!.spec.phase;
       for (const [p, prof] of [[buyer, bp], [seller, sp]] as const) {
-        p.profit = round2(p.profit + prof);
-        p.trades += 1;
-        p.best = Math.max(p.best, prof);
-        p.pp[ph] = round2(p.pp[ph] + prof);
+        if (!this.d.inPractice) {
+          p.profit = round2(p.profit + prof);
+          p.trades += 1;
+          p.best = Math.max(p.best, prof);
+          p.pp[ph] = round2(p.pp[ph] + prof);
+        }
         r!.roundProfit[p.id] = round2((r!.roundProfit[p.id] ?? 0) + prof);
       }
       this.dealCard(buyer);
@@ -547,9 +598,10 @@ export class Room {
 
   predict(by: string, value: number) {
     const r = this.round;
-    if (this.d.stage !== 'briefing' || !r) fail('Predictions are locked.');
+    if (this.d.stage !== 'briefing' || !r || this.d.inPractice) fail('Predictions are locked.');
     const v = round2(Number(value));
-    if (!Number.isFinite(v) || v < 0 || v > 9999) fail('Enter a real price.');
+    if (this.d.settings.predictMode === 'choice' && v !== 1 && v !== -1) fail('Pick shrink or grow.');
+    if (!Number.isFinite(v) || v < -1 || v > 9999) fail('Enter a real price.');
     r.predictions[by] = v;
     this.touch();
   }
@@ -687,7 +739,7 @@ export class Room {
             durationMs: r.durationMs, momentum: r.momentum, shift: this.shift(r), result: r.result,
           }
         : null,
-      history, me, isHost,
+      history, me, isHost, practice: !!this.d.inPractice,
     };
   }
 }

@@ -511,3 +511,58 @@ h1, h2, h3 { margin: 0; letter-spacing: -0.01em; }
   .lobby, .briefing, .trading, .recap, .board, .swap-grid, .verdict-grid, .mvc-row { grid-template-columns: 1fr; }
   .mvc-charts { grid-auto-flow: row; }
 }
+
+/* ---------- simplified flow: how-to, practice, calls ---------- */
+.amber { color: var(--amber); }
+.phase-badge.practice { background: rgba(255, 194, 75, 0.15); color: var(--amber); border: 1px solid rgba(255, 194, 75, 0.5); }
+.howto-stage, .practice-recap { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; text-align: center; }
+.howto-title { font-family: var(--display); font-weight: 400; font-size: clamp(56px, 6vw, 120px); letter-spacing: 0.03em; line-height: 1; }
+.howto-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; width: 100%; max-width: 1500px; }
+.howto-step { position: relative; background: var(--panel); border: 1px solid var(--line2); border-radius: 24px; padding: 28px 24px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.howto-step h3 { font-size: 1.8em; }
+.howto-step p { margin: 0; font-size: 1.25em; color: var(--muted); }
+.howto-num { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); width: 40px; height: 40px; border-radius: 50%; background: var(--up); color: #03140b; font-weight: 700; font-size: 1.3em; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(25, 230, 140, 0.5); }
+.howto-emoji { font-size: 4.5em; line-height: 1.1; }
+.howto-foot { display: flex; flex-direction: column; gap: 10px; font-size: 1.25em; max-width: 1200px; }
+.howto-money { font-size: 1.5em; font-weight: 700; }
+.priceboard { display: flex; align-items: center; gap: 28px; background: var(--panel); border: 1px solid var(--line2); border-radius: 20px; padding: 18px 26px; }
+.pb-val { font-size: 2.6em; font-weight: 700; line-height: 1.1; }
+.pb-arrow { font-size: 1.4em; color: var(--muted); }
+.pb-gap { margin-left: auto; text-align: right; }
+.meme-note { background: rgba(177, 140, 255, 0.12); border: 1px solid rgba(177, 140, 255, 0.45); border-radius: 14px; padding: 12px 16px; font-size: 1.15em; }
+.eq-card.eq-small { font-size: 1.05em; padding: 14px 20px; opacity: 0.85; }
+.predict-ask { font-size: 1.5em; font-weight: 700; }
+.call-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.call-opt { border-radius: 16px; padding: 16px; font-family: var(--display); font-size: 2em; letter-spacing: 0.03em; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.call-opt span, .call-btn span { font-family: var(--font); font-size: 0.42em; letter-spacing: 0; color: var(--muted); }
+.call-opt.shrink, .call-btn.shrink { background: rgba(76, 201, 255, 0.1); border: 2px solid rgba(76, 201, 255, 0.5); color: var(--cyan); }
+.call-opt.grow, .call-btn.grow { background: rgba(177, 140, 255, 0.1); border: 2px solid rgba(177, 140, 255, 0.5); color: var(--violet); }
+.practice-banner { position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); background: rgba(255, 194, 75, 0.16); border: 1px solid rgba(255, 194, 75, 0.6); color: var(--amber); padding: 8px 18px; border-radius: 999px; font-weight: 700; white-space: nowrap; z-index: 2; animation: pulse 1s infinite alternate; }
+.practice-banner.phone { position: static; transform: none; text-align: center; white-space: normal; border-radius: 14px; }
+.call-result { font-size: 1.6em; margin: 4px 0; }
+.call-result .grew { color: var(--violet); }
+.call-result .shrank { color: var(--cyan); }
+.call-winners { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.pr-stats { display: flex; gap: 60px; }
+.pr-stats .big-num { font-size: 5em; line-height: 1; }
+.pr-missing { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; max-width: 1200px; font-size: 1.1em; }
+.chip.small-chip { font-size: 1em; padding: 6px 14px; }
+.pr-foot { font-size: 1.6em; margin: 0; }
+.swap-plain { font-size: 1.15em; margin: 0; font-weight: 700; }
+.rule { display: flex; gap: 12px; align-items: flex-start; }
+.rule-emoji { font-size: 28px; line-height: 1; }
+.rule-money { border-top: 1px solid var(--line); padding-top: 10px; font-weight: 700; }
+.role-plain { font-size: 18px; font-weight: 700; margin: 4px 0; }
+.practice-done { font-family: var(--display); font-weight: 400; font-size: 52px; }
+.pp-board { display: flex; justify-content: space-around; text-align: center; background: rgba(0, 0, 0, 0.25); border-radius: 12px; padding: 10px; }
+.pp-num { font-size: 26px; font-weight: 700; }
+.call-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.call-btn { border-radius: 18px; padding: 18px 8px; font-family: var(--display); font-size: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: transform 0.15s; }
+.call-btn span { font-size: 13px; }
+.call-btn.on { transform: scale(1.04); box-shadow: 0 0 0 3px currentColor, 0 0 30px currentColor; }
+.call-btn.on::after { content: '✓ LOCKED'; font-family: var(--mono); font-size: 11px; margin-top: 2px; }
+.card-role { font-family: var(--display); font-size: 22px; letter-spacing: 0.04em; }
+.card.buyer .card-role { color: var(--up); }
+.card.seller .card-role { color: var(--pink); }
+.card-tip { font-size: 14px; font-weight: 700; opacity: 0.85; }
+@media (max-width: 1100px) { .howto-steps { grid-template-columns: 1fr; } }

@@ -9,7 +9,8 @@ The Slidev talk solves *Market Equilibrium: Stability and Time Paths* (a–e). A
 - The host opens **Host a new game** on the projector. Students join on their phones with the 5‑digit PIN or the QR code.
 - Half the class are **buyers**, half **sellers**. Each phone holds a secret card: a buyer's limit or a seller's floor, drawn so demand is `q_d = d0 − d1 p` and supply is `q_s = −s0 + s1 p`. Cards expire, so keep trading.
 - Students haggle in person. One reports the deal (counterparty + price) and the other confirms. The server rejects any trade where someone would lose money, so everyone trades rationally. Profit = limit − price (buyers) or price − floor (sellers).
-- Before each round the projector shows that round's equations and pre-market prints. Everyone **predicts the close** (average of the last 20 s) for a bonus of up to $25.
+- After **Start**, a *How to play* screen walks through the three steps, then a 45-second **practice round** that doesn't count.
+- Before each round everyone **makes the call**: will the gap between the opening price and the fair price `p*` **shrink** or **grow** by the closing bell? A right call earns $25. (Lobby setting *Guess price* switches to guessing the exact close.)
 - **Half 1 · Blue chip**: plain cards. The open is shocked $12–20 off `p*`, and the gap decays (`p' = −λ(d1+s1)(p−p*)`).
 - **Halftime**: buyers and sellers swap roles.
 - **Half 2 · Meme mode**: every card shifts by `β·p′`, where `p′` is the live price trend. That adds the `d2 p′` and `s2 p′` terms from part C, so `p′ = k(p−p*)` with `k = 1/β`. A small pre-market push grows into a bubble.

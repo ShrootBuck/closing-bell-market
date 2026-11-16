@@ -16,7 +16,7 @@ export interface Award {
   stat: string;
 }
 
-export function awards(players: PublicPlayer[]): Award[] {
+export function awards(players: PublicPlayer[], mode: 'choice' | 'number' = 'number'): Award[] {
   const pool = players;
   if (!pool.length) return [];
   const best = <T,>(f: (p: PublicPlayer) => T, cmp: (a: T, b: T) => boolean, list = pool) =>
@@ -25,7 +25,11 @@ export function awards(players: PublicPlayer[]): Award[] {
   const wolf = ranked(pool)[0];
   out.push({ emoji: '🐺', title: 'Wolf of the Floor', who: wolf, stat: money(wolf.total) });
   const quants = pool.filter((p) => p.predErr.length >= 1);
-  if (quants.length) {
+  if (quants.length && mode === 'choice') {
+    const hits = (p: PublicPlayer) => p.predErr.filter((e) => e === 0).length;
+    const q = best(hits, (a, b) => a > b, quants);
+    if (hits(q) > 0) out.push({ emoji: '🧮', title: 'Best Quant', who: q, stat: `${hits(q)}/${q.predErr.length} calls right` });
+  } else if (quants.length) {
     const avg = (p: PublicPlayer) => p.predErr.reduce((a, b) => a + b, 0) / p.predErr.length;
     const q = best(avg, (a, b) => a < b, quants);
     out.push({ emoji: '🧮', title: 'Best Quant', who: q, stat: `avg miss ${money(avg(q))}` });
@@ -69,7 +73,7 @@ export function Final({ view }: { view: View }) {
   return (
     <div className="final">
       {step === 0 && <Podium players={view.players} />}
-      {step === 1 && <Board players={view.players} />}
+      {step === 1 && <Board players={view.players} mode={view.settings.predictMode} />}
       {step === 2 && <MathVsClass history={view.history} />}
       {step === 3 && <Verdict history={view.history} />}
     </div>
@@ -124,8 +128,8 @@ function Podium({ players }: { players: PublicPlayer[] }) {
   );
 }
 
-function Board({ players }: { players: PublicPlayer[] }) {
-  const aw = awards(players);
+function Board({ players, mode }: { players: PublicPlayer[]; mode: 'choice' | 'number' }) {
+  const aw = awards(players, mode);
   return (
     <div className="board">
       <div className="board-list">

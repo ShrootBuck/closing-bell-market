@@ -1,6 +1,7 @@
 export type Role = 'buyer' | 'seller';
 export type Kind = 'stable' | 'hype';
-export type Stage = 'lobby' | 'briefing' | 'trading' | 'recap' | 'swap' | 'final';
+export type Stage = 'lobby' | 'howto' | 'briefing' | 'trading' | 'recap' | 'swap' | 'final';
+export type PredictMode = 'choice' | 'number';
 
 export interface Settings {
   roundsPerPhase: number; // rounds in each phase (2 phases)
@@ -8,6 +9,8 @@ export interface Settings {
   cardSeconds: number; // card lifetime before it is re-dealt
   hype: number; // beta (minutes): card shift = beta * p'
   predictBonus: number; // max $ for a perfect close prediction
+  practice: boolean; // 45s practice round before round 1
+  predictMode: PredictMode; // 'choice' = will the gap shrink or grow; 'number' = guess the close
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -16,6 +19,8 @@ export const DEFAULT_SETTINGS: Settings = {
   cardSeconds: 30,
   hype: 1,
   predictBonus: 25,
+  practice: true,
+  predictMode: 'choice',
 };
 
 export interface Player {
@@ -110,6 +115,7 @@ export interface RoundResult {
   preds: PredResult[];
   top: { id: string; profit: number }[];
   best: { id: string; profit: number; price: number } | null;
+  grew: boolean; // did |close - p*| end bigger than the opening gap?
 }
 
 export interface Proposal {
@@ -185,6 +191,7 @@ export interface View {
   history: PastRound[]; // completed rounds (prints included)
   me: MeView | null;
   isHost: boolean;
+  practice: boolean; // the current round is the practice round
 }
 
 // ---------- protocol ----------

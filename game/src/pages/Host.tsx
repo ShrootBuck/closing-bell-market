@@ -145,7 +145,7 @@ function Projector({ room, view, isHost }: { room: Room; view: View; isHost: boo
       <main className="proj-main">
         <AnimatePresence mode="wait">
           <motion.div
-            key={stage + view.roundIndex}
+            key={stage + view.roundIndex + (view.practice ? 'p' : '')}
             className="stage-wrap"
             initial={{ opacity: 0, y: 24, filter: 'blur(6px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -153,9 +153,10 @@ function Projector({ room, view, isHost }: { room: Room; view: View; isHost: boo
             transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}
           >
             {stage === 'lobby' && <Lobby room={room} view={view} isHost={isHost} />}
+            {stage === 'howto' && <HowTo view={view} />}
             {stage === 'briefing' && <Briefing view={view} />}
             {stage === 'trading' && <Trading room={room} view={view} toasts={toasts} />}
-            {stage === 'recap' && <Recap view={view} />}
+            {stage === 'recap' && (view.practice ? <PracticeRecap view={view} /> : <Recap view={view} />)}
             {stage === 'swap' && <Swap view={view} />}
             {stage === 'final' && <Final view={view} />}
           </motion.div>
@@ -189,10 +190,16 @@ function TopBar({ view }: { view: View }) {
       <Logo small />
       {spec && (
         <div className="tb-round">
-          <span className={`phase-badge ${spec.kind}`}>{spec.kind === 'stable' ? 'BLUE CHIP' : 'MEME MODE'}</span>
-          <span className="tb-r mono">
-            ROUND {view.roundIndex + 1}/{view.totalRounds}
-          </span>
+          {view.practice ? (
+            <span className="phase-badge practice">PRACTICE · DOESN'T COUNT</span>
+          ) : (
+            <>
+              <span className={`phase-badge ${spec.kind}`}>{spec.kind === 'stable' ? 'BLUE CHIP' : 'MEME MODE'}</span>
+              <span className="tb-r mono">
+                ROUND {view.roundIndex + 1}/{view.totalRounds}
+              </span>
+            </>
+          )}
           <span className="tb-ticker">${spec.ticker}</span>
           <span className="muted tb-co">{spec.company}</span>
         </div>
@@ -304,6 +311,26 @@ function Settings({ room, view }: { room: Room; view: View }) {
       <Opt k="cardSeconds" label="Card life" opts={[20, 30, 45]} fmt={(n) => `${n}s`} />
       <Opt k="hype" label="Hype β (min)" opts={[0.5, 1, 2]} fmt={(n) => `${n}`} />
       <div className="setting">
+        <span className="muted">Practice round</span>
+        <div className="seg">
+          {[true, false].map((v) => (
+            <button key={String(v)} className={s.practice === v ? 'on' : ''} onClick={() => set({ practice: v })}>
+              {v ? 'On' : 'Off'}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="setting">
+        <span className="muted">Predictions</span>
+        <div className="seg">
+          {(['choice', 'number'] as const).map((v) => (
+            <button key={v} className={s.predictMode === v ? 'on' : ''} onClick={() => set({ predictMode: v })}>
+              {v === 'choice' ? 'Shrink/grow' : 'Guess price'}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="setting">
         <span className="muted">Practice bots</span>
         <div className="seg">
           {[0, 2, 6, 12].map((n) => (
@@ -317,6 +344,50 @@ function Settings({ room, view }: { room: Room; view: View }) {
   );
 }
 
+// ---------------- how to play ----------------
+
+export const HOWTO = [
+  { emoji: '🃏', title: 'Check your card', body: 'Buyers: never pay MORE than your number. Sellers: never sell for LESS than your number.' },
+  { emoji: '🗣️', title: 'Find someone & haggle', body: 'Buyers find sellers. In person, out loud. Agree on a price.' },
+  { emoji: '🤝', title: 'Tap “I made a deal”', body: 'One of you picks the other + types the price. They tap confirm. Ka-ching.' },
+];
+
+function HowTo({ view }: { view: View }) {
+  return (
+    <div className="howto-stage">
+      <motion.h1 className="howto-title" initial={{ y: -30, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+        HOW TO PLAY
+      </motion.h1>
+      <div className="howto-steps">
+        {HOWTO.map((h, i) => (
+          <motion.div
+            key={h.title}
+            className="howto-step"
+            initial={{ y: 60, opacity: 0, rotate: -3 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            transition={{ delay: 0.4 + i * 0.5, type: 'spring', stiffness: 160, damping: 14 }}
+          >
+            <div className="howto-num">{i + 1}</div>
+            <div className="howto-emoji">{h.emoji}</div>
+            <h3>{h.title}</h3>
+            <p>{h.body}</p>
+          </motion.div>
+        ))}
+      </div>
+      <motion.div className="howto-foot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}>
+        <div className="howto-money">
+          💰 Profit = the gap between the price and your card. <b>Most money wins.</b>
+        </div>
+        <div className="muted">
+          You get a new card after every deal, so keep going. Half the room are{' '}
+          <RoleTag role="buyer" /> and half are <RoleTag role="seller" />. At halftime you swap.
+          {view.settings.practice && <> First up: a <b className="up">45-second practice round</b> that doesn't count.</>}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 // ---------------- briefing ----------------
 
 function Briefing({ view }: { view: View }) {
@@ -324,8 +395,11 @@ function Briefing({ view }: { view: View }) {
   const spec = r.spec;
   const eq = equations(spec);
   const hype = spec.kind === 'hype';
+  const choice = view.settings.predictMode === 'choice';
   const humans = view.players.filter((p) => !p.bot);
   const locked = humans.filter((p) => p.predicted);
+  const open = spec.open[spec.open.length - 1];
+  const gap = open - spec.pStar;
   return (
     <div className="briefing">
       <div className="brief-left">
@@ -337,8 +411,30 @@ function Briefing({ view }: { view: View }) {
           <div className="big-ticker">${spec.ticker}</div>
           <div className="muted">{spec.company}</div>
         </div>
-        <div className="eq-card">
-          <div className="eq-title">Today's market {hype && <span className="phase-badge hype">cards move with p′</span>}</div>
+        {choice && (
+          <div className="priceboard">
+            <div>
+              <div className="muted small">FAIR PRICE (supply = demand)</div>
+              <div className="mono pb-val amber">{money(spec.pStar)}</div>
+            </div>
+            <div className="pb-arrow">vs</div>
+            <div>
+              <div className="muted small">OPENS AT</div>
+              <div className={`mono pb-val ${gap >= 0 ? 'up' : 'down'}`}>{money(open)}</div>
+            </div>
+            <div className="pb-gap">
+              <div className="muted small">GAP</div>
+              <div className="mono pb-val">{signed(gap)}</div>
+            </div>
+          </div>
+        )}
+        {hype && (
+          <div className="meme-note">
+            🚀 <b>Meme mode:</b> everyone's card follows the chart. Price going up → every number goes up.
+          </div>
+        )}
+        <div className={`eq-card ${choice ? 'eq-small' : ''}`}>
+          <div className="eq-title">{choice ? 'The math behind it 🤓' : "Today's market"} {hype && <span className="phase-badge hype">cards move with p′</span>}</div>
           <Tex block tex={eq.qd} />
           <Tex block tex={eq.qs} />
           <div className="eq-hint muted">
@@ -353,21 +449,39 @@ function Briefing({ view }: { view: View }) {
             )}
           </div>
         </div>
-        <div className="premarket">
-          <span className="muted">PRE-MARKET PRINTS</span>
-          {spec.open.map((p, i) => (
-            <motion.span key={i} className="mono pm-print" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.35 }}>
-              {money(p)}
-              {i < spec.open.length - 1 && <span className="muted"> → </span>}
-            </motion.span>
-          ))}
-          {hype && <span className="pm-trend">{spec.open[2] > spec.open[0] ? '↗ trending up' : '↘ trending down'}</span>}
-        </div>
+        {!choice && (
+          <div className="premarket">
+            <span className="muted">PRE-MARKET PRINTS</span>
+            {spec.open.map((p, i) => (
+              <motion.span key={i} className="mono pm-print" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + i * 0.35 }}>
+                {money(p)}
+                {i < spec.open.length - 1 && <span className="muted"> → </span>}
+              </motion.span>
+            ))}
+            {hype && <span className="pm-trend">{spec.open[2] > spec.open[0] ? '↗ trending up' : '↘ trending down'}</span>}
+          </div>
+        )}
       </div>
       <div className="brief-right">
         <div className="predict-card">
-          <div className="predict-q">🔮 PREDICT THE CLOSE</div>
-          <div className="muted">Average price over the last 20 seconds. Within $10 earns up to {money(view.settings.predictBonus, 0)} on the Rich List.</div>
+          {choice ? (
+            <>
+              <div className="predict-q">🔮 MAKE THE CALL</div>
+              <div className="predict-ask">
+                By the closing bell, the {money(Math.abs(gap), 0)} gap will…
+              </div>
+              <div className="call-opts">
+                <div className="call-opt shrink">🎯 SHRINK<span>price drifts back to fair</span></div>
+                <div className="call-opt grow">🚀 GROW<span>price runs further away</span></div>
+              </div>
+              <div className="muted">Right call = {money(view.settings.predictBonus, 0)} on the Rich List. Vote on your phone.</div>
+            </>
+          ) : (
+            <>
+              <div className="predict-q">🔮 PREDICT THE CLOSE</div>
+              <div className="muted">Average price over the last 20 seconds. Within $10 earns up to {money(view.settings.predictBonus, 0)} on the Rich List.</div>
+            </>
+          )}
           <div className="predict-count">
             <span className="mono big-num">{locked.length}</span>
             <span className="muted">/ {humans.length} locked in</span>
@@ -383,11 +497,11 @@ function Briefing({ view }: { view: View }) {
         <div className="role-split">
           <div>
             <RoleTag role="buyer" /> <span className="mono">{view.players.filter((p) => p.role === 'buyer').length}</span>
-            <div className="muted small">pay ≤ your limit</div>
+            <div className="muted small">pay less than your card</div>
           </div>
           <div>
             <RoleTag role="seller" /> <span className="mono">{view.players.filter((p) => p.role === 'seller').length}</span>
-            <div className="muted small">sell ≥ your floor</div>
+            <div className="muted small">sell for more than your card</div>
           </div>
         </div>
       </div>
@@ -445,6 +559,8 @@ function Trading({ room, view, toasts }: { room: Room; view: View; toasts: { id:
                 every card <b className="mono">{signed(r.shift)}</b>
               </div>
             </div>
+          ) : view.settings.predictMode === 'choice' || view.practice ? (
+            <Stat label="FAIR PRICE p*" value={money(spec.pStar)} sub="where supply = demand" />
           ) : (
             <Stat label="EQUILIBRIUM p*" value="???" sub="revealed at the bell" />
           )}
@@ -455,7 +571,12 @@ function Trading({ room, view, toasts }: { room: Room; view: View; toasts: { id:
           </div>
         </div>
         <div className="chart-wrap">
-          <Chart prints={r.prints} durationS={r.durationMs / 1000} tNow={clock / 1000} pStar={hype ? spec.pStar : null} live />
+          <Chart prints={r.prints} durationS={r.durationMs / 1000} tNow={clock / 1000} pStar={hype || view.practice || view.settings.predictMode === 'choice' ? spec.pStar : null} live />
+          {view.practice && (
+            <div className="practice-banner">
+              🧪 PRACTICE ROUND · doesn't count · everyone make <b>one deal</b>
+            </div>
+          )}
           <div className="toasts">
             <AnimatePresence>
               {toasts.map(({ id, print }) => {
@@ -491,7 +612,7 @@ function Trading({ room, view, toasts }: { room: Room; view: View; toasts: { id:
       </div>
       <aside className="trade-side">
         <div className="side-title">
-          💰 RICH LIST <span className="muted small">all rounds</span>
+          💰 RICH LIST <span className="muted small">{view.practice ? 'practice $ shown in green' : 'all rounds'}</span>
         </div>
         <RichList players={view.players} limit={12} showRound />
       </aside>
@@ -603,6 +724,30 @@ function Recap({ view }: { view: View }) {
           </div>
         )}
         <div className="recap-lists">
+          {view.settings.predictMode === 'choice' ? (
+            <div>
+              <div className="side-title small">🔮 THE CALL</div>
+              <div className="call-result">
+                The gap <b className={res.grew ? 'grew' : 'shrank'}>{res.grew ? 'GREW 🚀' : 'SHRANK 🎯'}</b>
+              </div>
+              <div className="muted small">
+                {res.preds.filter((p) => p.err === 0).length} of {res.preds.length} called it · +{money(view.settings.predictBonus, 0)} each
+              </div>
+              <div className="call-winners">
+                {res.preds
+                  .filter((p) => p.err === 0)
+                  .slice(0, 14)
+                  .map((p, i) => {
+                    const pl = byId.get(p.id);
+                    return pl && (
+                      <motion.span key={p.id} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.8 + i * 0.06 }} title={pl.name}>
+                        <Avatar p={pl} size={30} />
+                      </motion.span>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : (
           <div>
             <div className="side-title small">🔮 BEST CALLS</div>
             {res.preds.slice(0, 3).map((p, i) => {
@@ -619,6 +764,7 @@ function Recap({ view }: { view: View }) {
             })}
             {!res.preds.length && <div className="muted small">No predictions this round.</div>}
           </div>
+          )}
           <div>
             <div className="side-title small">🏆 ROUND'S TOP DESKS</div>
             {res.top.map((t, i) => {
@@ -639,6 +785,42 @@ function Recap({ view }: { view: View }) {
   );
 }
 
+function PracticeRecap({ view }: { view: View }) {
+  const r = view.round!;
+  const real = r.prints.filter((p) => !p.ghost);
+  const traded = new Set(real.flatMap((p) => [p.buyer, p.seller]));
+  const humans = view.players.filter((p) => !p.bot);
+  const missing = humans.filter((p) => !traded.has(p.id));
+  return (
+    <div className="practice-recap">
+      <motion.h1 className="howto-title" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring' }}>
+        PRACTICE OVER ✅
+      </motion.h1>
+      <div className="pr-stats">
+        <div>
+          <div className="mono big-num up">{real.length}</div>
+          <div className="muted">deals made</div>
+        </div>
+        <div>
+          <div className="mono big-num">{humans.length - missing.length}/{humans.length}</div>
+          <div className="muted">traders got a deal in</div>
+        </div>
+      </div>
+      {missing.length > 0 && (
+        <div className="pr-missing">
+          <span className="muted">Still need help:</span>
+          {missing.map((p) => (
+            <span key={p.id} className="chip small-chip" style={{ borderColor: p.color }}>
+              {p.avatar} {p.name}
+            </span>
+          ))}
+        </div>
+      )}
+      <p className="pr-foot">Everyone is back to <b className="mono">$0.00</b>. Questions? Ask now. <b>Next round counts.</b></p>
+    </div>
+  );
+}
+
 // ---------------- swap ----------------
 
 function Swap({ view }: { view: View }) {
@@ -652,7 +834,8 @@ function Swap({ view }: { view: View }) {
       <div className="swap-grid">
         <motion.div className="swap-card" initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} transition={{ delay: 0.5, duration: 0.6 }}>
           <div className="phase-badge hype">MEME MODE ACTIVATED</div>
-          <h3>The chart now moves your card</h3>
+          <h3>🚀 Your card now follows the chart</h3>
+          <p className="swap-plain">Price going up → every card's number goes up. Price going down → every number goes down.</p>
           <Tex block tex={`\\text{your limit} = \\text{base} + \\beta\\,p', \\qquad \\beta = ${s.hype}\\ \\text{min}`} />
           <ul>
             <li>
@@ -681,11 +864,14 @@ function primaryFor(view: View): { label: string; action: 'next' | 'bell' | 'sta
   switch (view.stage) {
     case 'lobby':
       return { label: '▶ Start the game', action: 'start' };
+    case 'howto':
+      return { label: view.settings.practice ? '🧪 Start practice round (45s)' : '▶ Round 1', action: 'next' };
     case 'briefing':
       return { label: '🔔 Ring the opening bell', action: 'bell' };
     case 'trading':
       return null;
     case 'recap': {
+      if (view.practice) return { label: '▶ Round 1, for real', action: 'next' };
       const n = view.roundIndex + 1;
       if (n >= view.totalRounds) return { label: '🏆 Final results', action: 'next' };
       if (n === view.settings.roundsPerPhase) return { label: '⇄ Halftime: swap roles', action: 'next' };
@@ -696,6 +882,7 @@ function primaryFor(view: View): { label: string; action: 'next' | 'bell' | 'sta
     case 'final':
       return view.finalStep < 3 ? { label: 'Next ▶', action: 'next' } : null;
   }
+  return null;
 }
 
 function useHostActions(room: Room, view: View) {
@@ -813,7 +1000,7 @@ function HostRemote({ room, view }: { room: Room; view: View }) {
   const r = view.round;
   const left = r ? r.durationMs - liveClock(view, room.serverNow) : 0;
   const stageName: Record<string, string> = {
-    lobby: 'Lobby', briefing: 'Briefing', trading: 'Trading', recap: 'Round recap', swap: 'Halftime', final: `Results ${view.finalStep + 1}/4`,
+    lobby: 'Lobby', howto: 'How to play', briefing: 'Briefing', trading: 'Trading', recap: 'Round recap', swap: 'Halftime', final: `Results ${view.finalStep + 1}/4`,
   };
   return (
     <div className="remote">
@@ -824,7 +1011,7 @@ function HostRemote({ room, view }: { room: Room; view: View }) {
         <h2>{stageName[view.stage]}</h2>
         {r && (
           <div className="muted">
-            Round {view.roundIndex + 1}/{view.totalRounds} · ${r.spec.ticker}
+            {view.practice ? 'Practice round' : `Round ${view.roundIndex + 1}/${view.totalRounds}`} · ${r.spec.ticker}
           </div>
         )}
         {view.stage === 'trading' && r && <div className="mono huge">{r.running ? mmss(left) : 'PAUSED'}</div>}

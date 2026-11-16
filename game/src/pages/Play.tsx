@@ -8,7 +8,7 @@ import { Avatar, Logo, Money, RoleTag, StatusPill, Tex } from '../ui/bits';
 import { Chart } from '../ui/Chart';
 import { liveClock, mmss, money, num, ranked, signed, useFrame, vibrate } from '../util';
 import { sfx, unlockAudio } from '../sound';
-import { equations } from './Host';
+import { equations, HOWTO } from './Host';
 import { awards } from './Final';
 
 type Room = ReturnType<typeof useRoom>;
@@ -168,7 +168,7 @@ function Desk({ room, view }: { room: Room; view: View }) {
       <div className="desk-body">
         <AnimatePresence mode="wait">
           <motion.div
-            key={stage + view.roundIndex}
+            key={stage + view.roundIndex + (view.practice ? 'p' : '')}
             className="desk-stage"
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
@@ -176,9 +176,10 @@ function Desk({ room, view }: { room: Room; view: View }) {
             transition={{ duration: 0.25 }}
           >
             {stage === 'lobby' && <PhoneLobby view={view} />}
+            {stage === 'howto' && <PhoneHowTo view={view} />}
             {stage === 'briefing' && <PhoneBriefing room={room} view={view} />}
             {stage === 'trading' && <PhoneTrading room={room} view={view} />}
-            {stage === 'recap' && <PhoneRecap view={view} />}
+            {stage === 'recap' && (view.practice ? <PhonePracticeRecap view={view} /> : <PhoneRecap view={view} />)}
             {stage === 'swap' && <PhoneSwap view={view} />}
             {stage === 'final' && <PhoneFinal view={view} />}
           </motion.div>
@@ -212,19 +213,60 @@ function PhoneLobby({ view }: { view: View }) {
       </motion.div>
       <h1>You're in.</h1>
       <p className="muted">Eyes on the projector. The bell rings soon.</p>
-      <div className="rules">
-        <div>
-          <b>1.</b> You'll get a secret <b>card</b>: your buy limit or your sell floor.
-        </div>
-        <div>
-          <b>2.</b> Find someone on the other side IRL. Haggle. Loudly.
-        </div>
-        <div>
-          <b>3.</b> One of you taps <b>🤝 I made a deal</b>, the other confirms. Profit = the gap between price and your card.
-        </div>
-        <div>
-          <b>4.</b> Most money at the closing bell wins.
-        </div>
+      <Steps />
+    </div>
+  );
+}
+
+function Steps() {
+  return (
+    <div className="rules">
+      {HOWTO.map((h, i) => (
+        <motion.div key={h.title} className="rule" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 + i * 0.25 }}>
+          <span className="rule-emoji">{h.emoji}</span>
+          <div>
+            <b>
+              {i + 1}. {h.title}
+            </b>
+            <div className="muted small">{h.body}</div>
+          </div>
+        </motion.div>
+      ))}
+      <div className="rule-money">💰 Profit = gap between the price and your card. Most money wins.</div>
+    </div>
+  );
+}
+
+function PhoneHowTo({ view }: { view: View }) {
+  const me = view.me!;
+  return (
+    <div className="p-lobby">
+      <div className="muted small">YOU ARE A</div>
+      <RoleTag role={me.role} big />
+      <p className="role-plain">{me.role === 'buyer' ? 'You buy. Pay LESS than your card.' : 'You sell. Get MORE than your card.'}</p>
+      <Steps />
+      {view.settings.practice && <p className="muted">First up: a 45-second practice round. It doesn't count.</p>}
+    </div>
+  );
+}
+
+function PhonePracticeRecap({ view }: { view: View }) {
+  const me = view.me!;
+  const r = view.round!;
+  const mine = r.prints.filter((p) => p.buyer === me.id || p.seller === me.id);
+  const made = mine.reduce((a, p) => a + ((p.buyer === me.id ? p.bp : p.sp) ?? 0), 0);
+  return (
+    <div className="p-recap">
+      <h1 className="practice-done">{mine.length ? 'Nailed it ✅' : 'Practice over'}</h1>
+      {mine.length ? (
+        <p>
+          You made {mine.length} deal{mine.length > 1 ? 's' : ''} for <b className="up">{signed(made)}</b> of practice money.
+        </p>
+      ) : (
+        <p>No deal yet. That's fine! Next round, find someone on the other side and tap 🤝.</p>
+      )}
+      <div className="recap-big">
+        Scores reset to <b className="mono">$0.00</b>. <b>Next round counts.</b>
       </div>
     </div>
   );
@@ -238,6 +280,18 @@ function PhoneBriefing({ room, view }: { room: Room; view: View }) {
   const [val, setVal] = useState<string>(me.prediction != null ? String(me.prediction) : '');
   const [editing, setEditing] = useState(me.prediction == null);
   const [err, setErr] = useState('');
+  const choice = view.settings.predictMode === 'choice';
+  const open = spec.open[spec.open.length - 1];
+  const call = async (v: 1 | -1) => {
+    try {
+      await room.send({ t: 'predict', value: v });
+      sfx.pop();
+      vibrate(20);
+      setErr('');
+    } catch (e) {
+      setErr((e as Error).message);
+    }
+  };
   const lock = async () => {
     const v = Number(val);
     if (!val || !Number.isFinite(v)) return setErr('Enter a price.');
@@ -256,12 +310,40 @@ function PhoneBriefing({ room, view }: { room: Room; view: View }) {
       <div className="p-role-banner">
         <span className="muted small">THIS ROUND YOU ARE A</span>
         <RoleTag role={me.role} big />
-        <span className="muted small">{me.role === 'buyer' ? 'Buy low. Never pay above your limit.' : 'Sell high. Never sell below your floor.'}</span>
+        <span className="role-plain">{me.role === 'buyer' ? 'You buy. Pay LESS than your card.' : 'You sell. Get MORE than your card.'}</span>
       </div>
       <div className="p-co">
         <span className={`phase-badge ${spec.kind}`}>{spec.kind === 'stable' ? 'BLUE CHIP' : 'MEME MODE'}</span>
-        <b>${spec.ticker}</b> <span className="muted">round {view.roundIndex + 1}/{view.totalRounds}</span>
+        <b>${spec.ticker}</b> <span className="muted">round {view.roundIndex + 1} of {view.totalRounds}</span>
       </div>
+      {spec.kind === 'hype' && <div className="meme-note">🚀 <b>Meme mode:</b> your card follows the chart. Price going up → your number goes up.</div>}
+      {choice ? (
+        <div className="predict-card phone-predict">
+          <div className="pp-board">
+            <div>
+              <div className="muted small">FAIR PRICE</div>
+              <div className="mono amber pp-num">{money(spec.pStar)}</div>
+            </div>
+            <div>
+              <div className="muted small">OPENS AT</div>
+              <div className="mono pp-num">{money(open)}</div>
+            </div>
+          </div>
+          <div className="predict-q">🔮 Make the call</div>
+          <div className="muted small">By the closing bell, the {money(Math.abs(open - spec.pStar), 0)} gap will… Right call = {money(view.settings.predictBonus, 0)}.</div>
+          <div className="call-btns">
+            <button className={`call-btn shrink ${me.prediction === -1 ? 'on' : ''}`} onClick={() => call(-1)}>
+              🎯 SHRINK<span>back to fair price</span>
+            </button>
+            <button className={`call-btn grow ${me.prediction === 1 ? 'on' : ''}`} onClick={() => call(1)}>
+              🚀 GROW<span>runs further away</span>
+            </button>
+          </div>
+          {me.prediction != null && <div className="muted small">🔒 Locked in. Tap the other one to switch.</div>}
+          {err && <div className="err">{err}</div>}
+        </div>
+      ) : (
+      <>
       <div className="eq-card small-eq">
         <Tex block tex={eq.qd} />
         <Tex block tex={eq.qs} />
@@ -288,6 +370,8 @@ function PhoneBriefing({ room, view }: { room: Room; view: View }) {
         )}
         {err && <div className="err">{err}</div>}
       </div>
+      </>
+      )}
     </div>
   );
 }
@@ -312,6 +396,7 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
 
   return (
     <div className="p-trade">
+      {view.practice && <div className="practice-banner phone">🧪 PRACTICE · doesn't count · make one deal!</div>}
       <div className="mkt-strip">
         <div>
           <span className="muted small">${spec.ticker}</span>{' '}
@@ -319,13 +404,13 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
         </div>
         {hype && (
           <div className={`mono small ${r.momentum >= 0 ? 'up' : 'down'}`}>
-            p′ {r.momentum >= 0 ? '+' : '−'}{Math.abs(r.momentum).toFixed(1)}/min
+            {r.momentum >= 0 ? '📈 rising' : '📉 falling'}
           </div>
         )}
         <div className={`mono mkt-timer ${left < 10500 ? 'down pulse' : ''}`}>{r.running ? mmss(left) : '⏸ HALT'}</div>
       </div>
       <div className="mini-chart">
-        <Chart prints={r.prints} durationS={r.durationMs / 1000} tNow={clock / 1000} pStar={hype ? spec.pStar : null} live compact />
+        <Chart prints={r.prints} durationS={r.durationMs / 1000} tNow={clock / 1000} pStar={hype || view.practice || view.settings.predictMode === 'choice' ? spec.pStar : null} live compact />
       </div>
       <AnimatePresence mode="wait">
         {card && limit != null && (
@@ -338,19 +423,22 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
             transition={{ duration: 0.3 }}
           >
             <div className="card-top">
-              <RoleTag role={me.role} />
-              <span className="muted small">{me.role === 'buyer' ? 'PAY AT MOST' : 'SELL FOR AT LEAST'}</span>
+              <span className="card-role">{me.role === 'buyer' ? "YOU'RE BUYING" : "YOU'RE SELLING"}</span>
+              <span className="muted small">{me.role === 'buyer' ? "don't pay more than" : "don't sell for less than"}</span>
             </div>
             <Money value={limit} className="card-limit" />
+            <div className="card-tip">
+              {me.role === 'buyer' ? 'Every $1 under this = $1 profit for you' : 'Every $1 over this = $1 profit for you'}
+            </div>
             {hype && (
               <div className="card-hype mono small">
-                base {money(card.base, 0)} <span className={r.shift >= 0 ? 'up' : 'down'}>{signed(r.shift)} hype</span>
+                🚀 follows the chart: {money(card.base, 0)} <span className={r.shift >= 0 ? 'up' : 'down'}>{signed(r.shift)}</span>
               </div>
             )}
             <div className="card-life">
               <div className="card-life-fill" style={{ width: `${life * 100}%` }} />
             </div>
-            <div className="muted small">new card in {Math.max(0, Math.ceil((card.expiresMs - clock) / 1000))}s · trade it or lose it</div>
+            <div className="muted small">new card in {Math.max(0, Math.ceil((card.expiresMs - clock) / 1000))}s · use it or lose it</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -462,11 +550,11 @@ function DealSheet({ room, view, limit, onClose }: { room: Room; view: View; lim
             <div className="price-display mono">${price || '0'}</div>
             <div className={`profit-preview ${prof == null ? '' : prof >= 0 ? 'up' : 'down'}`}>
               {prof == null ? (
-                <span className="muted">Your {me.role === 'buyer' ? 'limit' : 'floor'}: {money(liveLimit)}</span>
+                <span className="muted">Your card: {money(liveLimit)}</span>
               ) : prof >= 0 ? (
                 <>Your profit {signed(prof)}</>
               ) : (
-                <>✗ Irrational: you'd lose {money(-prof)}</>
+                <>✗ You'd lose {money(-prof)}. Not allowed.</>
               )}
             </div>
             <div className="keypad">
@@ -535,7 +623,7 @@ function Incoming({ room, view }: { room: Room; view: View }) {
           </div>
           <div className="inc-price mono">{money(pr.price)}</div>
           <div className={`profit-preview big ${prof >= 0 ? 'up' : 'down'}`}>
-            {prof >= 0 ? <>Your profit {signed(prof)}</> : <>✗ You'd lose {money(-prof)}: irrational</>}
+            {prof >= 0 ? <>Your profit {signed(prof)}</> : <>✗ You'd lose {money(-prof)}. Hit Nope.</>}
           </div>
           <div className="inc-timer">
             <div style={{ width: `${(left / 20000) * 100}%` }} />
@@ -577,7 +665,12 @@ function PhoneRecap({ view }: { view: View }) {
         <div className="muted small">YOUR ROUND</div>
         <Money value={mine.roundProfit} sign className={`huge ${mine.roundProfit >= 0 ? 'up' : 'down'}`} />
       </div>
-      {pred ? (
+      {pred && view.settings.predictMode === 'choice' ? (
+        <div className="pred-res">
+          🔮 You said <b>{pred.guess > 0 ? 'GROW' : 'SHRINK'}</b>. The gap {res?.grew ? 'grew' : 'shrank'}.{' '}
+          {pred.err === 0 ? <b className="up">Correct! +{money(pred.bonus)}</b> : <b className="down">Wrong call.</b>}
+        </div>
+      ) : pred ? (
         <div className="pred-res">
           🔮 You called {money(pred.guess)}, off by {money(pred.err)} → <b className="up">+{money(pred.bonus)}</b>
         </div>
@@ -603,9 +696,9 @@ function PhoneSwap({ view }: { view: View }) {
       </motion.div>
       <div className="phase-badge hype">MEME MODE</div>
       <p>
-        Your card now moves with the chart: <b>limit = base + β·p′</b>. Rising price → everyone's limit goes up. Falling → down.
+        🚀 Your card now <b>follows the chart</b>. Price going up → your number goes up. Price going down → it goes down.
       </p>
-      <p className="muted small">Think about what that does to p − p*. 👀</p>
+      <p className="muted small">So if the price starts running away from fair value… does anything pull it back? 👀</p>
     </div>
   );
 }
@@ -615,7 +708,7 @@ function PhoneFinal({ view }: { view: View }) {
   const ranks = ranked(view.players);
   const rank = ranks.findIndex((p) => p.id === me.id) + 1;
   const mine = ranks[rank - 1];
-  const mineAwards = awards(view.players).filter((a) => a.who.id === me.id);
+  const mineAwards = awards(view.players, view.settings.predictMode).filter((a) => a.who.id === me.id);
   useEffect(() => {
     if (rank <= 3) {
       const t = setTimeout(() => confetti({ particleCount: 150, spread: 120, origin: { y: 0.4 } }), 3500);
