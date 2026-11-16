@@ -13,7 +13,7 @@ transition: market-shift
 
 ---
 
-<div class="tag">The trading floor · Differential equations</div>
+<div class="tag">Predicting the market with differential equations</div>
 
 <div class="split"><div>
 
