@@ -339,7 +339,6 @@ $$
 
 <div class="result">The coefficient on the price gap determines whether a shock fades or grows.</div>
 
-<div class="credit">Exercise by James E. Foster · George Washington University</div>
 
 <!--
 Think back to the moment the background desks switched strategies. In the homework, a change in how buyers and sellers respond also flips the sign on the price gap. Both models give exactly the same price when the derivative is zero. To predict what happens after a shock, we need the equation for how the price moves.
