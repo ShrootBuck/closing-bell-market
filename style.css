@@ -77,6 +77,9 @@
 .slidev-layout .result.expect-note p{margin:0}
 .slidev-layout .big-eqs .katex-display,.slidev-layout .big-eqs .katex-display>.katex{text-align:center}
 
+/* Part E: the given demand and supply, set off above the working. */
+.slidev-layout .givens .katex-display{margin:6px 0}
+
 /* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
 .slidev-layout .reveal-lines .mord.dishonored{opacity:0}
 

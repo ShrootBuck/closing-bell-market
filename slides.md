@@ -526,6 +526,14 @@ Below equilibrium → price falls.
 
 # What price does the model predict?
 
+<div class="givens">
+
+$$
+\text{Given:}\quad q_d=30-2p+4p',\qquad q_s=-20+p-6p',\qquad p(0)=5
+$$
+
+</div>
+
 $$
 30-2p+4p'=-20+p-6p' \quad\Rightarrow\quad 10p'=3p-50.
 $$
@@ -547,11 +555,11 @@ At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
 <!--
 **The big idea:** plug in real numbers and the unstable model predicts something wild: a negative price.
 
-**Set up the problem.**
+**Set up the problem. Point at the given line at the top.**
 - "Here's the exercise. Time is in months. Demand is 30 minus 2p plus 4 p prime. Supply is minus 20 plus p minus 6 p prime. Price starts at five dollars."
 
-**Line 1 — point at 10p′ = 3p − 50.**
-- "Set them equal. Move the p prime terms left: 4 plus 6 is 10 p prime."
+**Next line — point at 10p′ = 3p − 50.**
+- "Market clearing again, so set q_d equal to q_s. Move the p prime terms left: 4 plus 6 is 10 p prime."
 - "Move the p terms right: p plus 2p is 3p. And 30 plus 20 is 50."
 
 **Line 2 — point at p* = 50/3.**
