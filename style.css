@@ -47,3 +47,6 @@
  .slidev-layout h1,.slidev-layout .tag,.slidev-layout .market-lab{animation:none}
  .market-shift-enter-active,.market-shift-leave-active,.slidev-vclick-target{transition:none}
 }
+
+/* Room for the ticker tape (global-top.vue) above every slide. */
+.slidev-layout{padding-top:52px}

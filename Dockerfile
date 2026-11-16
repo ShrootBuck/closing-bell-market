@@ -2,7 +2,7 @@ FROM node:22-bookworm-slim AS slides
 WORKDIR /deck
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
-COPY slides.md style.css ./
+COPY slides.md style.css global-top.vue ./
 COPY components ./components
 COPY public ./public
 RUN npm run build -- --base /talk/
