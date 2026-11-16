@@ -52,6 +52,9 @@
 .slidev-layout .demand-supply{view-transition-name:demand-supply}
 .slidev-layout .demand-supply.corner{position:absolute;top:96px;right:54px;font-size:15px;padding:4px 16px;border-left:2px solid #38634c;opacity:.9}
 .slidev-layout .demand-supply.corner .katex-display{margin:4px 0}
+::view-transition-group(demand-supply){animation-duration:1.4s;animation-timing-function:cubic-bezier(.45,0,.2,1)}
+::view-transition-old(demand-supply),::view-transition-new(demand-supply){animation-duration:1.4s}
+::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation-duration:.6s}
 
 /* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
 .slidev-layout .reveal-lines .mord.dishonored{opacity:0}
