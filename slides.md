@@ -133,10 +133,11 @@ $$
 
 <div class="reveal-lines">
 
-$$ {hide|1|1-2|all}
+$$ {hide|1|1-2|1-3|all}
 \begin{aligned}
 p' &= \lambda(q_d-q_s)\\
    &= \lambda\big[d_0+s_0-(d_1+s_1)p\big]\\
+   &= \lambda\big[\underbrace{(d_1+s_1)p^*}_{d_0+s_0}-(d_1+s_1)p\big]\\
    &= -\lambda(d_1+s_1)(p-p^*).
 \end{aligned}
 $$
@@ -171,9 +172,12 @@ $x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
 - "When we subtract supply, the minus s0 flips to plus s0, and the p terms group together."
 - "So the imbalance is d0 plus s0, minus d1 plus s1 times p."
 
-[click] **Line 3 appears — point at (p − p*).**
+[click] **Line 3 appears — point at the underbrace.**
 - "Here's the trick. From the last slide, p star is d0 plus s0 over d1 plus s1."
-- "So d0 plus s0 is the same thing as d1 plus s1 times p star. Swap that in and factor."
+- "Multiply both sides by d1 plus s1: d0 plus s0 is the same thing as d1 plus s1 times p star. That's what the brace says. Swap it in."
+
+[click] **Line 4 appears — point at (p − p*).**
+- "Both terms have d1 plus s1 in them, so factor it out, and pull the minus sign to the front."
 - "Now the price only cares about one thing: how far it is from p star. That's the gap, p minus p star."
 
 [click] **"Set x = p − p*…" appears — point at x and c.**
