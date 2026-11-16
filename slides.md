@@ -46,6 +46,8 @@ const basePath = import.meta.env.BASE_URL
 -->
 
 ---
+transition: view-transition
+---
 
 <div class="tag">The starting point</div>
 
@@ -54,6 +56,7 @@ const basePath = import.meta.env.BASE_URL
 <div class="split"><div>
 
 <div v-click>
+<div class="demand-supply">
 
 $$
 q_d=d_0-d_1p
@@ -63,6 +66,7 @@ $$
 q_s=-s_0+s_1p
 $$
 
+</div>
 </div>
 
 <div v-click>
@@ -111,11 +115,25 @@ $$
 
 ---
 
-<div class="tag">Part A · Price adjustment</div>
+<div class="tag">Part A</div>
 
-# Follow the gap from equilibrium
+# Price adjustment
+
+<div class="demand-supply corner">
 
 $$
+q_d=d_0-d_1p
+$$
+
+$$
+q_s=-s_0+s_1p
+$$
+
+</div>
+
+<div class="reveal-lines">
+
+$$ {hide|1|1-2|all}
 \begin{aligned}
 p' &= \lambda(q_d-q_s)\\
    &= \lambda\big[d_0+s_0-(d_1+s_1)p\big]\\
@@ -123,7 +141,13 @@ p' &= \lambda(q_d-q_s)\\
 \end{aligned}
 $$
 
+</div>
+
+<div v-click>
+
 Set $x=p-p^*$ and $c=-\lambda(d_1+s_1)$. Then $x'=cx$.
+
+</div>
 
 <div v-click class="result">
 
@@ -134,23 +158,25 @@ $x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
 <!--
 **The big idea first:** the price moves depending on how out of balance the market is. Too many buyers, it goes up. Too many sellers, it goes down.
 
-**Line 1 — point at p′ = λ(q_d − q_s).**
+**q_d and q_s slide into the top-right corner** so the room can see both lines while you plug them in.
+
+[click] **Line 1 appears — point at p′ = λ(q_d − q_s).**
 - "p prime is how fast the price is changing."
 - "q_d minus q_s is the imbalance we just played with on the slider. Positive means more buyers than sellers."
 - "Lambda is just a speed knob. It's positive. Big lambda, the price reacts fast."
 - Say it in words: "More buyers than sellers, price goes up. More sellers, price goes down. Balanced, price stays put."
 
-**Line 2 — point at the bracket.**
-- "Now we plug in our two lines: demand is d0 minus d1 p, supply is minus s0 plus s1 p."
+[click] **Line 2 appears — point at the bracket.**
+- "Now we plug in our two lines (point at the corner): demand is d0 minus d1 p, supply is minus s0 plus s1 p."
 - "When we subtract supply, the minus s0 flips to plus s0, and the p terms group together."
 - "So the imbalance is d0 plus s0, minus d1 plus s1 times p."
 
-**Line 3 — point at (p − p*).**
+[click] **Line 3 appears — point at (p − p*).**
 - "Here's the trick. From the last slide, p star is d0 plus s0 over d1 plus s1."
 - "So d0 plus s0 is the same thing as d1 plus s1 times p star. Swap that in and factor."
 - "Now the price only cares about one thing: how far it is from p star. That's the gap, p minus p star."
 
-**Bottom line — point at x and c.**
+[click] **"Set x = p − p*…" appears — point at x and c.**
 - "Let's give the gap a name: x. x is just the distance from equilibrium."
 - "p star never changes, so the gap changes exactly as fast as the price does."
 - "And all the constants out front, call that one number c. Lambda, d1, s1 are all positive, so c is negative. Remember that, it's the whole story."

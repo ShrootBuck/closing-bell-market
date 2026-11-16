@@ -48,5 +48,13 @@
  .market-shift-enter-active,.market-shift-leave-active,.slidev-vclick-target{transition:none}
 }
 
+/* q_d / q_s glide from slide 2 into the corner of slide 3 (view transition). */
+.slidev-layout .demand-supply{view-transition-name:demand-supply}
+.slidev-layout .demand-supply.corner{position:absolute;top:96px;right:54px;font-size:15px;padding:4px 16px;border-left:2px solid #38634c;opacity:.9}
+.slidev-layout .demand-supply.corner .katex-display{margin:4px 0}
+
+/* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
+.slidev-layout .reveal-lines .mord.dishonored{opacity:0}
+
 /* Room for the ticker tape (global-top.vue) above every slide. */
 .slidev-layout{padding-top:52px}
