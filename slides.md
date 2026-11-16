@@ -35,22 +35,29 @@ Suppose a market has an equilibrium price of ten dollars, but the current price 
 
 # Where do buyers and sellers agree?
 
-$$
-q_d=d_0-d_1p \qquad q_s=-s_0+s_1p
-$$
-
-At a steady price, equate the quantities and collect the price terms.
+<div class="split"><div>
 
 $$
-d_0-d_1p^*=-s_0+s_1p^*
-\quad\Longrightarrow\quad
+q_d=d_0-d_1p
+$$
+
+$$
+q_s=-s_0+s_1p
+$$
+
+
+Equating demand and supply gives
+
+$$
 p^*=\frac{d_0+s_0}{d_1+s_1}.
 $$
 
-<div class="result">Below this price, buyers want more units than sellers offer.</div>
+Move the price above and below the crossing.
+
+</div><MarketLab mode="supply" /></div>
 
 <!--
-The subscripts d and s stand for demand and supply. All the parameters are positive. A higher price therefore reduces the number of units buyers want and increases the number sellers offer. The star marks the price where those two quantities match. Imagine posting a price a dollar below the star. More buyers show up, while fewer sellers find it worth selling. What happens to tomorrow’s price depends on the rule we give the market.
+The subscripts d and s stand for demand and supply. A higher price reduces the quantity buyers want and increases the quantity sellers offer. In this graph, demand is ten minus the price and supply is the price minus two. They match at six dollars. At four dollars, buyers want six units and sellers offer two. That leaves four units of excess demand. Move the price to eight dollars and the imbalance reverses. The first model uses that imbalance to determine how the price moves.
 -->
 
 ---
@@ -95,14 +102,11 @@ $$
 
 The gap keeps its sign as it shrinks.
 
-</div><img :src="basePath + 'stable.svg'" alt="Paths from above and below approach the dashed equilibrium price."/></div>
+</div><MarketLab mode="stable" /></div>
 
-<script setup>
-const basePath = import.meta.env.BASE_URL
-</script>
 
 <!--
-Pick any starting price. Its distance from equilibrium gets multiplied by the same shrinking exponential. A price above the line falls. A price below the line rises. Neither crosses the line because the exponential stays positive. If we start exactly on the line, the gap is zero forever. That word every is what makes this equilibrium globally stable.
+Move the speed slider. All four paths still approach ten dollars, but they get there at different speeds. Pick any starting price. Its distance from equilibrium gets multiplied by the same shrinking exponential. A price above the line falls. A price below the line rises. Neither crosses the line because the exponential stays positive. If we start exactly on the line, the gap is zero forever. That word every is what makes this equilibrium globally stable.
 -->
 
 ---
@@ -165,14 +169,46 @@ Above $p^*$, the price rises. Below $p^*$, it falls.
 
 Only $p_0=p^*$ gives a constant path.
 
-</div><img :src="basePath + 'unstable.svg'" alt="Paths on either side diverge from the equilibrium price."/></div>
+</div><MarketLab mode="unstable" /></div>
 
-<script setup>
-const basePath = import.meta.env.BASE_URL
-</script>
 
 <!--
-Yes. Every point on both curves satisfies demand equals supply. But pick a starting price even slightly above the star, and the positive gap grows exponentially. Start slightly below, and the gap becomes increasingly negative. Either curve is a counterexample to the claim that every clearing path converges. The equilibrium itself is unstable.
+Yes. Every point on both curves satisfies demand equals supply. But pick a starting price even slightly above the star, and the positive gap grows exponentially. Start slightly below, and the gap becomes increasingly negative. Either curve is a counterexample to the claim that every clearing path converges. The equilibrium itself is unstable. Now increase the trend reaction slider. Since that sum is in the denominator of k, the paths move away more slowly. They still move away.
+-->
+
+---
+
+<div class="tag">Compare the feedback</div>
+
+# Which way does a small push send it?
+
+<div class="analogy-grid">
+<div>
+
+### Price adjustment
+
+<svg viewBox="0 0 380 120" role="img" aria-label="A ball settles at the bottom of a valley"><path d="M20 15Q190 200 360 15" fill="none" stroke="#08765a" stroke-width="4"/><circle cx="190" cy="107" r="10" fill="#08765a"/><text x="70" y="60">↘</text><text x="290" y="60">↙</text></svg>
+
+$p'=-a(p-p^*)$, with $a>0$.
+
+Above equilibrium → price falls.<br/>
+Below equilibrium → price rises.
+
+</div><div>
+
+### Expectations model
+
+<svg viewBox="0 0 380 120" role="img" aria-label="A ball moves away from the top of a hill"><path d="M20 110Q190 -75 360 110" fill="none" stroke="#b64e35" stroke-width="4"/><circle cx="190" cy="9" r="9" fill="#b64e35"/><text x="70" y="60">↙</text><text x="290" y="60">↘</text></svg>
+
+$p'=k(p-p^*)$, with $k>0$.
+
+Above equilibrium → price rises.<br/>
+Below equilibrium → price falls.
+
+</div></div>
+
+<!--
+Think of equilibrium as the ball's resting position. In the valley, a small push sends the ball back toward the bottom. On the hilltop, a small push sends it farther away. The price equations describe those same two directions of motion. For the first equation, the minus sign reverses the direction of the price gap. For the second, the positive coefficient preserves it. These pictures illustrate stability. Our price equations are first order, so they do not include a physical ball's inertia or bouncing.
 -->
 
 ---
@@ -219,16 +255,29 @@ The slope falls from −$3.50 per month to −$70.30 per month by month ten.
 
 Both $p$ and $p'$ tend to $-\infty$.
 
-</div><img :src="basePath + 'example.svg'" alt="Price passes zero at 1.19 months and falls ever faster through month ten."/></div>
+</div><MarketLab mode="example" /></div>
 
-<div class="result">The price crosses zero after just 1.19 months.</div>
 
-<script setup>
-const basePath = import.meta.env.BASE_URL
-</script>
+
 
 <!--
 Differentiate the price path. The slope is already negative and gets more negative every month. Buyers expecting a bigger drop have a stronger incentive to wait. Sellers have a stronger incentive to sell now. Those effects are relative to what they would do at the same price with no trend. To find when the price reaches zero, set the exponential equal to fifty over thirty-five and take a logarithm. That gives about one point one nine months. If this product requires a nonnegative price, the model has already left its useful range long before month ten.
+-->
+
+---
+
+<div class="tag">Part E · Buyers and sellers</div>
+
+# Why does the fall accelerate?
+
+<div class="feedback-row"><div>Price falls<br/><strong>$p'&lt;0$</strong></div><span>→</span><div>Buyers wait<br/><strong>$4p'&lt;0$</strong></div><span>+</span><div>Sellers sell now<br/><strong>$-6p'&gt;0$</strong></div></div>
+
+<div class="result">Both expectation effects favor a further decline.</div>
+
+At the same price, buyers demand less and sellers supply more than they would without the trend terms.
+
+<!--
+Suppose the price is falling. Buyers can wait for a better deal, which reduces demand through the four times p prime term. Sellers want to sell before the next drop, which increases supply through minus six times p prime. Those are comparisons at the same price. Along the full path, the falling price also attracts buyers, so the total quantity traded can still increase. The clearing equation combines all those effects. It gives a negative slope that becomes more negative as the price moves farther below equilibrium.
 -->
 
 ---
@@ -263,7 +312,7 @@ Winning desk, pick one market shock. What did you think the rest of the room wou
 | The gap tends to shrink. | The gap tends to grow. |
 
 <!--
-Give us your best trade. Did you expect the shock to last, or did you think everybody else would? Look at the chart around the third bell. That’s when the background traders changed sides. The same price gap that used to attract sellers could suddenly attract buyers. The shocks and your own orders could overpower either effect. Underneath all that noise is the exact sign change we saw in the homework.
+Give us your best trade. Did you expect the shock to last, or did you think everybody else would? Look at the chart around the third bell. That’s when the background traders changed sides. The same price gap that used to attract sellers could suddenly attract buyers. The shocks and your own orders could overpower either effect. The background traders use the same two feedback directions as the homework. Our game also includes random shocks and student trades, so its price path will be noisier than the exponential curves.
 -->
 
 ---

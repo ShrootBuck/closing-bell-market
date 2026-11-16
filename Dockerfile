@@ -3,6 +3,7 @@ WORKDIR /deck
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
 COPY slides.md style.css ./
+COPY components ./components
 COPY public ./public
 RUN npm run build -- --base /talk/
 

@@ -1,0 +1,85 @@
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+const props = defineProps<{ mode: 'supply' | 'stable' | 'unstable' | 'example' }>()
+const price = ref(4), speed = ref(.5), expectations = ref(10), wide = ref(false)
+const equilibrium = computed(() => props.mode === 'supply' ? 6 : props.mode === 'example' ? 50 / 3 : 10)
+const demand = computed(() => 10 - price.value)
+const supply = computed(() => -2 + price.value)
+const horizon = computed(() => props.mode === 'example' ? wide.value ? 10 : 2.5 : 6)
+const lo = computed(() => props.mode === 'example' ? wide.value ? -240 : -10 : 0)
+const hi = computed(() => props.mode === 'example' ? 20 : 20)
+const x = (n: number) => 44 + n / horizon.value * 370
+const y = (n: number) => 208 - (n - lo.value) / (hi.value - lo.value) * 190
+const curve = (initial: number) => Array.from({length:161}, (_,i) => {
+  const t = i / 160 * horizon.value
+  const value = props.mode === 'example' ? 50/3 - 35/3 * Math.exp(.3*t)
+    : 10 + (initial - 10) * Math.exp((props.mode === 'stable' ? -speed.value : 5/expectations.value)*t)
+  return x(t) + ',' + y(value)
+}).join(' ')
+const starts = computed(() => props.mode === 'stable' ? [2,6,14,18] : props.mode === 'unstable' ? [8,9.5,10.5,12] : [5])
+const chartId = 'plot-' + props.mode
+const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,20])
+</script>
+
+<template>
+<section class="market-lab" @keydown.stop @click.stop>
+  <template v-if="mode === 'supply'">
+    <svg viewBox="0 0 440 250" role="img" aria-label="Supply and demand. Move price to compare quantities.">
+      <path d="M44 18V208H414" fill="none" stroke="#83988e"/>
+      <path d="M44 55L352 208" fill="none" stroke="#08765a" stroke-width="3"/>
+      <path d="M44 177L352 24" fill="none" stroke="#b64e35" stroke-width="3"/>
+      <path :d="'M44 '+(208-price*15.3)+'H414'" stroke="#153b30" stroke-dasharray="5 5"/>
+      <circle :cx="44+Math.max(0,demand)*30.8" :cy="208-price*15.3" r="5" fill="#08765a"/>
+      <circle :cx="44+Math.max(0,supply)*30.8" :cy="208-price*15.3" r="5" fill="#b64e35"/>
+      <text x="8" y="23">p</text><text x="370" y="238">quantity</text>
+      <text x="62" y="44" fill="#08765a">demand</text><text x="292" y="43" fill="#b64e35">supply</text>
+      <text x="5" :y="213-price*15.3">{{ price.toFixed(1) }}</text>
+      <text x="245" y="130">p* = 6</text>
+    </svg>
+    <label>Posted price <input v-model.number="price" type="range" min="2" max="10" step=".5" /><output>{{ price.toFixed(1) }}</output></label>
+    <div class="lab-readout">Demand {{ demand.toFixed(1) }} · Supply {{ supply.toFixed(1) }}</div>
+    <p class="lab-caption">{{ price < 6 ? 'Excess demand → price rises' : price > 6 ? 'Excess supply → price falls' : 'Quantities match → price holds' }}</p>
+  </template>
+  <template v-else>
+    <svg viewBox="0 0 440 250" role="img" :aria-label="mode === 'example' ? 'Numerical price path over time' : mode + ' price paths from four initial prices'">
+      <defs><clipPath :id="chartId"><rect x="44" y="17" width="370" height="191"/></clipPath></defs>
+      <path d="M44 18V208H414" fill="none" stroke="#83988e"/>
+      <path v-for="value in axis" :key="value" :d="'M44 '+y(value)+'H414'" stroke="#d0dad1"/>
+      <text v-for="value in axis" :key="'label'+value" x="3" :y="y(value)+5">{{ value }}</text>
+      <path :d="'M44 '+y(equilibrium)+'H414'" stroke="#52635a" stroke-dasharray="5 5"/>
+      <text x="300" :y="y(equilibrium)-7">p* = {{ equilibrium.toFixed(mode === 'example' ? 2 : 0) }}</text>
+      <g :clip-path="'url(#'+chartId+')'">
+        <polyline v-for="initial in starts" :key="initial" :points="curve(initial)" fill="none" :stroke="mode === 'stable' ? '#08765a' : '#b64e35'" stroke-width="3"/>
+      </g>
+      <text x="10" y="13">price</text><text x="42" y="235">0</text><text x="340" y="235">{{ horizon }} {{ mode === 'example' ? 'months' : 'time units' }}</text>
+    </svg>
+    <template v-if="mode === 'stable'">
+      <label>Speed λ(d₁+s₁) <input v-model.number="speed" type="range" min=".1" max="2" step=".05"/><output>{{ speed.toFixed(2) }}</output></label>
+      <div class="phase-line">p &lt; p* <b>→ &nbsp; p* &nbsp; ←</b> p &gt; p*</div>
+      <p class="lab-caption">Half the gap closes every {{ (Math.log(2)/speed).toFixed(2) }} time units.</p>
+    </template>
+    <template v-if="mode === 'unstable'">
+      <label>Trend reaction d₂+s₂ <input v-model.number="expectations" type="range" min="2" max="20" step=".5"/><output>{{ expectations.toFixed(1) }}</output></label>
+      <div class="phase-line">p &lt; p* <b>← &nbsp; p* &nbsp; →</b> p &gt; p*</div>
+      <p class="lab-caption">d₁+s₁ = 5. Gap doubles every {{ (Math.log(2)*expectations/5).toFixed(2) }} time units.</p>
+    </template>
+    <template v-if="mode === 'example'">
+      <div class="lab-buttons"><button :aria-pressed="!wide" @click="wide=false">First 2.5 months</button><button :aria-pressed="wide" @click="wide=true">First 10 months</button></div>
+      <p class="lab-caption">Zero at 1.19 months · p(10) ≈ −$217.66</p>
+    </template>
+  </template>
+</section>
+</template>
+
+<style scoped>
+.market-lab{background:#fffdf7;border:1px solid #d4ddd1;border-radius:12px;padding:14px}
+svg{width:100%;height:190px;display:block;font:14px Arial,sans-serif;fill:#52635a}
+label{display:grid;grid-template-columns:auto 1fr 42px;gap:9px;align-items:center;font:14px Arial,sans-serif;color:#153b30}
+input{width:100%;accent-color:#24755c}output{text-align:right;font-variant-numeric:tabular-nums}
+.lab-readout,.phase-line{font:16px Arial,sans-serif;margin-top:14px;text-align:center}
+.phase-line b{padding:0 14px}
+.market-lab .lab-caption{font:15px/1.35 Arial,sans-serif;margin:12px 0 0;color:#52635a}
+.lab-buttons{display:flex;gap:8px}
+button{background:#edf0e7;border:1px solid #c6d3c5;border-radius:6px;padding:8px;font:14px Arial;cursor:pointer;color:#153b30}
+button[aria-pressed=true]{background:#153b30;color:white}
+</style>
