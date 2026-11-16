@@ -526,7 +526,7 @@ Below equilibrium → price falls.
 
 # What price does the model predict?
 
-<div class="givens">
+<div v-click class="givens">
 
 $$
 \text{Given:}\quad q_d=30-2p+4p',\qquad q_s=-20+p-6p',\qquad p(0)=5
@@ -534,17 +534,29 @@ $$
 
 </div>
 
+<div v-click>
+
 $$
 30-2p+4p'=-20+p-6p' \quad\Rightarrow\quad 10p'=3p-50.
 $$
+
+</div>
+
+<div v-click>
 
 $$
 p^*=\frac{50}{3},\qquad p_0-p^*=5-\frac{50}{3}=-\frac{35}{3}.
 $$
 
+</div>
+
+<div v-click>
+
 $$
 p(t)=\frac{50}{3}-\frac{35}{3}e^{3t/10}
 $$
+
+</div>
 
 <div v-click class="result">
 
@@ -555,18 +567,18 @@ At month ten, $\displaystyle p(10)=\frac{50-35e^3}{3}\approx-\$217.66$.
 <!--
 **The big idea:** plug in real numbers and the unstable model predicts something wild: a negative price.
 
-**Set up the problem. Point at the given line at the top.**
+[click] **The given line appears.**
 - "Here's the exercise. Time is in months. Demand is 30 minus 2p plus 4 p prime. Supply is minus 20 plus p minus 6 p prime. Price starts at five dollars."
 
-**Next line — point at 10p′ = 3p − 50.**
+[click] **Next line — point at 10p′ = 3p − 50.**
 - "Market clearing again, so set q_d equal to q_s. Move the p prime terms left: 4 plus 6 is 10 p prime."
 - "Move the p terms right: p plus 2p is 3p. And 30 plus 20 is 50."
 
-**Line 2 — point at p* = 50/3.**
+[click] **p* and the starting gap appear — point at p* = 50/3.**
 - "Equilibrium is when p prime is zero. 3p equals 50, so p star is 50 over 3. About sixteen sixty-seven."
 - "We start at five. That's 35 over 3 below equilibrium. About eleven sixty-seven under."
 
-**Line 3 — point at p(t).**
+[click] **p(t) appears.**
 - "k is 3 over 10. So the price is p star minus 35 over 3 times e to the 3t over 10."
 - "Starting below and k is positive. Which way does it go?" (Down, and faster and faster.)
 
