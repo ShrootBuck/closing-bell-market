@@ -49,9 +49,11 @@ const basePath = import.meta.env.BASE_URL
 
 <div class="tag">The starting point</div>
 
-# Where do buyers and sellers agree?
+# The equilibrium price
 
 <div class="split"><div>
+
+<div v-click>
 
 $$
 q_d=d_0-d_1p
@@ -61,21 +63,28 @@ $$
 q_s=-s_0+s_1p
 $$
 
+</div>
+
+<div v-click>
 
 Equating demand and supply gives
+
+</div>
+
+<div v-click>
 
 $$
 p^*=\frac{d_0+s_0}{d_1+s_1}.
 $$
 
-Move the price above and below the crossing.
+</div>
 
 </div><MarketLab mode="supply" /></div>
 
 <!--
 **The big idea:** buyers want less when it's expensive, sellers offer more when it's expensive. Where those meet is the equilibrium price, p star.
 
-**Point at q_d = d0 − d1 p.**
+[click] **The two equations appear. Point at q_d = d0 − d1 p.**
 - "q d is how much buyers want. d for demand."
 - "d0 is how much they'd want if it were free. Every dollar the price goes up, they want d1 less. That's why it's minus."
 
@@ -83,8 +92,11 @@ Move the price above and below the crossing.
 - "q s is how much sellers offer. s for supply."
 - "Every dollar the price goes up, sellers offer s1 more. That's why it's plus."
 
-**Point at the p* formula.**
-- "Equilibrium is where those are equal. Set them equal and solve for p, and you get p star equals d0 plus s0 over d1 plus s1."
+[click] **"Equating demand and supply gives" appears.**
+- "Equilibrium is where those are equal. Set them equal and solve for p."
+
+[click] **The equilibrium price appears. Point at the p* formula.**
+- "You get p star equals d0 plus s0 over d1 plus s1."
 - "That's the price where every buyer who wants one finds a seller."
 
 **Now drag the slider (Posted price) — this is the fun part.**
