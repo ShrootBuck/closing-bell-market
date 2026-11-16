@@ -29,6 +29,14 @@ function App() {
   return <Landing go={go} />;
 }
 
+// If a lazily loaded chunk fails mid-deploy, reload once to pick up the new build.
+window.addEventListener('vite:preloadError', () => {
+  if (!sessionStorage.getItem('cb:reloaded')) {
+    sessionStorage.setItem('cb:reloaded', '1');
+    location.reload();
+  }
+});
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

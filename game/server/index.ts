@@ -143,7 +143,8 @@ const server = createServer((req: IncomingMessage, res: ServerResponse) => {
   if (file.startsWith(PUBLIC) && existsSync(file) && statSync(file).isFile())
     return sendFile(res, file, safe.startsWith('/assets/'));
   if (path.startsWith('/talk/') || path.startsWith('/assets/') || extname(path)) {
-    res.writeHead(404);
+    // Never let a CDN cache a 404: during a rolling deploy a new page can briefly ask an old container for new assets.
+    res.writeHead(404, { 'cache-control': 'no-store' });
     return res.end('not found');
   }
   const index = join(PUBLIC, 'index.html');
