@@ -168,7 +168,7 @@ function RoundMini({ h, i }: { h: PastRound; i: number }) {
       <div className="mini-foot mono small">
         {r.fit ? (
           <>
-            {h.spec.kind === 'stable' ? 'c' : 'k̂'} = {num(r.fit.rate)}/min
+            {h.spec.kind === 'stable' ? <>â = {num(-r.fit.rate)}</> : <>k̂ = {num(r.fit.rate)}</>}/min
             {h.spec.kind === 'hype' && <span className="muted"> (theory {num(h.spec.k)})</span>}
           </>
         ) : (
@@ -189,7 +189,7 @@ function MathVsClass({ history }: { history: PastRound[] }) {
         <div className="mvc-label">
           <div className="phase-badge stable">HALF 1 · BLUE CHIP</div>
           <Tex block tex="p' = -\lambda(d_1+s_1)(p-p^*)" />
-          <div className="muted small">Theory: <Tex tex="c<0" />, so the gap shrinks like <Tex tex="e^{ct}" /></div>
+          <div className="muted small">Theory: <Tex tex="a=\lambda(d_1+s_1)>0" />, so the gap shrinks like <Tex tex="e^{-at}" /></div>
           {s.lambda != null && (
             <div className="mvc-stat">
               your class's λ̂ ≈ <b className="mono">{num(s.lambda, 3)}</b>
@@ -229,14 +229,14 @@ function Verdict({ history }: { history: PastRound[] }) {
       <div className="verdict-grid">
         <motion.div className="vcard stable" initial={{ x: -60, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
           <div className="phase-badge stable">PRICE ADJUSTMENT</div>
-          <Tex block tex="p(t) = p^* + (p_0 - p^*)e^{ct},\ c<0" />
+          <Tex block tex="p(t) = p^* + (p_0 - p^*)e^{-at},\ a>0" />
           <div className="vbig">
             {s.sOk}/{s.stable.length}
           </div>
           <div>rounds where the gap shrank</div>
           {s.cMean != null && (
             <div className="muted mono">
-              avg fitted c = {num(s.cMean)}/min {s.cMean < 0 ? '✓ negative' : '✗ hmm'}
+              avg fitted a = {num(-s.cMean)}/min {s.cMean < 0 ? '✓ positive' : '✗ hmm'}
             </div>
           )}
           <div className="vtag">GLOBALLY STABLE 🏔️→⚪</div>

@@ -779,7 +779,7 @@ function Recap({ view }: { view: View }) {
                 </>
               ) : (
                 <>
-                  rate c = <b className="mono">{num(res.fit.rate)}</b>/min {res.fit.rate < 0 && <>· half-life {Math.round((Math.log(2) / -res.fit.rate) * 60)}s</>} · λ̂ ={' '}
+                  rate a = <b className="mono">{num(-res.fit.rate)}</b>/min {res.fit.rate < 0 && <>· half-life {Math.round((Math.log(2) / -res.fit.rate) * 60)}s</>} · λ̂ ={' '}
                   <b className="mono">{num(-res.fit.rate / (spec.d1 + spec.s1), 3)}</b>
                 </>
               )}
