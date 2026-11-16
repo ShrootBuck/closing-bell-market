@@ -372,40 +372,49 @@ When the price is expected to rise, buyers purchase more and suppliers sell less
 
 # Market clearing path
 
-$$
+<div class="reveal-lines">
+
+$$ {hide|1|1-2|all}
 \begin{aligned}
 d_0-d_1p+d_2p' &= -s_0+s_1p-s_2p'\\
 (d_2+s_2)p' &= (d_1+s_1)p-(d_0+s_0)\\
-p' &= k(p-p^*),\qquad k=\frac{d_1+s_1}{d_2+s_2}>0.
+p' &= k(p-p^*),\qquad k=\frac{d_1+s_1}{d_2+s_2}>0
 \end{aligned}
 $$
 
-<div v-click class="result">
+</div>
 
-The same integrating-factor steps, now with $e^{-kt}$, give $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
+<div v-click="4" class="result reveal-lines same-steps">
+
+$$ {1|all} {at:5}
+\begin{aligned}
+\text{Part A:}\quad p' &= -a(p-p^*) &\;\Longrightarrow\;\; p(t) &= p^*+(p_0-p^*)e^{-at}\\
+\text{Now:}\quad p' &= \phantom{-}k(p-p^*) &\;\Longrightarrow\;\; p(t) &= p^*+(p_0-p^*)e^{kt}
+\end{aligned}
+$$
 
 </div>
 
 <!--
 **The big idea:** do the same algebra as model one, and the sign flips. That one sign changes everything.
 
-**Line 1 — point at the top equation.**
+[click] **Line 1 — point at the top equation.**
 - "We just set demand equal to supply. Left side is demand, right side is supply, both with the new trend terms."
 
-**Line 2 — point at (d2 + s2)p′.**
+[click] **Line 2 — point at (d2 + s2)p′.**
 - "Move all the p prime terms to the left. d2 p prime and plus s2 p prime, so d2 plus s2 times p prime."
 - "Move the plain p terms to the right. Those become d1 plus s1 times p, minus d0 plus s0."
 
-**Line 3 — point at p′ = k(p − p*).**
+[click] **Line 3 — point at p′ = k(p − p*).**
 - "Divide both sides by d2 plus s2. And the same trick as before: d0 plus s0 is d1 plus s1 times p star."
 - "So p prime equals k times p minus p star. k is d1 plus s1 over d2 plus s2."
 - "Everything in k is positive, so k is positive."
 
-**Stop and compare out loud.**
-- "Model one was p prime equals minus a times the gap, with a positive. This is p prime equals plus k times the gap, with k positive. Same shape, opposite sign."
+[click] **The box appears with the Part A equation we already solved.**
+- "Look familiar? This is the equation from Part A, and its answer. Same shape: p prime equals a number times the gap."
 
-[click] **The answer pops up.**
-- "Same kind of linear equation, so same method: p prime minus k p equals minus k p star, multiply by the integrating factor e to the minus k t, integrate, and plug in p0."
+[click] **The new equation and its answer appear underneath.**
+- "Ours is the exact same equation, just with plus k where Part A had minus a. So the exact same steps work: integrating factor e to the minus k t, integrate, plug in p0."
 - "You get p star plus the starting gap times e to the k t."
 - "Only now k is positive, so e to the k t grows."
 
