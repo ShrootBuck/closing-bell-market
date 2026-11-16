@@ -1,7 +1,8 @@
 .git
 **/node_modules
-**/.next
-dist
+**/dist
+game/data
+.claude
 .agents
 *.pdf
 **/.env*

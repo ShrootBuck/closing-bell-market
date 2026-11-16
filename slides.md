@@ -291,37 +291,37 @@ Suppose the price is falling. Buyers can wait for a better deal, which reduces d
 
 ---
 
-<div class="tag">Live trading · TSLA</div>
+<div class="tag">Live trading · Buyers and sellers</div>
 
 # Closing Bell
 
-A whale just bought in. You have 96 seconds to trade against the room.
+Scan the code on the projector. You get a secret card and a role.
 
-| Go long | Sell short | Go flat |
-|---|---|---|
-| Hold 3 shares. You want the price up. | Owe 3 shares. You want the price down. | Close your position. Keep your gains or losses. |
+| Buyer | Seller |
+|---|---|
+| Never pay more than your limit. Profit = limit − price. | Never sell below your floor. Profit = price − floor. |
+
+Find someone on the other side, haggle, and report the deal. They confirm. Before each round, predict the close: within $10 earns a bonus.
 
 <div class="result"><a href="https://market.zaydkrunz.com/" target="_blank">Open the trading floor ↗</a></div>
 
 <!--
-Get your phones out. Scan the code on the projector and give your desk a name. We’re trading a fictional Tesla stock that starts at a hundred dollars. Going long puts you three shares long. Short does the reverse. Go flat to cash out. You can change your mind at the next quote, but every share you trade costs a quarter. The highest profit at the closing bell wins. Watch the room when a whale buys in or a fund is forced to sell. Your classmates’ trades move the price too.
+Get your phones out. Scan the code and pick a trader name. Half of you are buyers and half are sellers. Your card is private. Buyers, it's the most you can pay. Sellers, it's the least you'll take. Walk around, haggle out loud, and when you agree on a price, one of you reports it and the other confirms. The app blocks any trade that loses you money. Cards expire, so trade or lose them. Before each round the projector shows the demand and supply equations. Use them to predict the closing price for bonus money. At halftime, buyers and sellers swap, and the market changes: your card starts moving with the chart. Most money on the Rich List at the end wins.
 -->
 
 ---
 
 <div class="tag">Closing Bell · Desk recap</div>
 
-# Who timed the market?
+# Did your class match the math?
 
-Winning desk, pick one market shock. What did you think the rest of the room would do?
-
-| First half | Second half |
+| First half · Blue chip | Second half · Meme mode |
 |---|---|
-| A price above $100 attracts sellers. | A price above $100 attracts momentum buyers. |
-| The gap tends to shrink. | The gap tends to grow. |
+| $p' = -\lambda(d_1+s_1)(p-p^*)$ | Cards shift by $\beta p'$, so $p' = k(p-p^*)$ |
+| The opening gap shrank toward $p^*$. | A small push turned into a bubble. |
 
 <!--
-Give us your best trade. Did you expect the shock to last, or did you think everybody else would? Look at the chart around the third bell. That’s when the background traders changed sides. The same price gap that used to attract sellers could suddenly attract buyers. The shocks and your own orders could overpower either effect. The background traders use the same two feedback directions as the homework. Our game also includes random shocks and student trades, so its price path will be noisier than the exponential curves.
+The results screen fit an exponential to every round of your trades. In the first half, your fitted rate was negative: the gap from equilibrium decayed, just like the price-adjustment model. That gives us an estimate of your class's lambda. In the second half, the only change was that each card moved with the price trend. That's the d2 and s2 terms from part C. The fitted rate turned positive, and a five-dollar push in the pre-market kept growing until it burst. Same supply and demand, same equilibrium price, opposite stability.
 -->
 
 ---

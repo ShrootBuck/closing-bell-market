@@ -6,3 +6,5 @@ dist/
 .agents/
 skills-lock.json
 *.tsbuildinfo
+.claude/
+game/data/
