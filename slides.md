@@ -58,14 +58,20 @@ transition: view-transition
 <div v-click>
 <div class="demand-supply">
 
+<div class="eq-qd">
+
 $$
 q_d=d_0-d_1p
 $$
+
+</div>
+<div class="eq-qs">
 
 $$
 q_s=-s_0+s_1p
 $$
 
+</div>
 </div>
 </div>
 
@@ -121,14 +127,20 @@ $$
 
 <div class="demand-supply corner">
 
+<div class="eq-qd">
+
 $$
 q_d=d_0-d_1p
 $$
+
+</div>
+<div class="eq-qs">
 
 $$
 q_s=-s_0+s_1p
 $$
 
+</div>
 </div>
 
 <div class="reveal-lines">
