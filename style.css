@@ -70,6 +70,11 @@
 .slidev-layout .after-glide{animation:panel-arrive .6s 1.3s ease both}
 @media(prefers-reduced-motion:reduce){.slidev-layout .after-glide{animation:none}}
 
+/* Slide 6: the two expectation equations, big and centered. */
+.slidev-layout .big-eqs{margin:36px 0 30px}
+.slidev-layout .big-eqs p{font-size:38px;line-height:1.3}
+.slidev-layout .big-eqs .katex-display,.slidev-layout .big-eqs .katex-display>.katex{text-align:center}
+
 /* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
 .slidev-layout .reveal-lines .mord.dishonored{opacity:0}
 

@@ -327,17 +327,18 @@ $$
 
 # Expectations
 
+<div class="big-eqs">
+
 $$
-q_d=d_0-d_1p+d_2p' \qquad q_s=-s_0+s_1p-s_2p'
+\begin{aligned}
+q_d &= d_0-d_1p+d_2p'\\
+q_s &= -s_0+s_1p-s_2p'
+\end{aligned}
 $$
-
-When the price rises, buyers bring purchases forward and sellers hold units back.
-
-<div class="result">
-
-Require $q_d=q_s$ at every instant. What slope $p'$ makes that possible?
 
 </div>
+
+When the price is expected to rise, buyers purchase more and suppliers sell less.
 
 <!--
 **The big idea:** now people react to the trend, not just the price. If the price is rising, buyers rush in and sellers hold out.
@@ -354,7 +355,7 @@ Require $q_d=q_s$ at every instant. What slope $p'$ makes that possible?
 - "Supply gets minus s2 times p prime. Price rising, sellers offer less right now. They're holding out for a better price."
 - "Opposite signs because buyers and sellers react in opposite ways."
 
-**Point at the box.**
+**Bridge to the next slide (say it, there's no box anymore).**
 - "Now here's the rule for this model: the market always clears. Every unit someone wants to buy matches a unit someone sells, at every instant."
 - "So the question is: how fast does the price have to be moving for that to work out? That's the next slide."
 
