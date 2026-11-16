@@ -358,9 +358,9 @@ Require $q_d=q_s$ at every instant. What slope $p'$ makes that possible?
 
 ---
 
-<div class="tag">Part C · Market-clearing path</div>
+<div class="tag">Part C</div>
 
-# Solve for the slope that clears the market
+# Market clearing path
 
 $$
 \begin{aligned}
@@ -404,11 +404,15 @@ The same integrating-factor steps, now with $e^{-kt}$, give $\displaystyle p(t)=
 
 ---
 
-<div class="tag">Part D · Stability with expectations</div>
+<div class="tag">Part D</div>
 
-# Can a market clear and still drift away?
+# Instability with expectations
 
 <div class="split"><div>
+
+$$
+p(t)=p^*+(p_0-p^*)e^{kt}
+$$
 
 $k>0$, so $e^{kt}$ grows.
 
@@ -421,6 +425,8 @@ Only $p_0=p^*$ gives a constant path.
 
 <!--
 **The big idea:** yes. The market clears at every instant and still runs away from equilibrium. That's an unstable equilibrium.
+
+**Point at p(t) at the top.** "Here's the market-clearing path we just solved for."
 
 **Point at "k > 0, so e^{kt} grows."**
 - "k is positive, so e to the k t gets bigger and bigger. The gap blows up."
@@ -446,12 +452,12 @@ Only $p_0=p^*$ gives a constant path.
 
 <div class="tag">Compare the feedback</div>
 
-# Which way does a small push send it?
+# Comparing the two equilibria
 
 <div class="analogy-grid">
 <div v-click="1">
 
-### Price adjustment
+### Price adjustment model
 
 <svg viewBox="0 0 380 120" role="img" aria-label="A ball settles at the bottom of a valley"><path d="M20 15Q190 200 360 15" fill="none" stroke="#70e6a7" stroke-width="4"/><circle cx="190" cy="107" r="10" fill="#70e6a7"/><text x="70" y="60">↘</text><text x="290" y="60">↙</text></svg>
 
@@ -684,7 +690,7 @@ Find someone on the other side, haggle, and report the deal. They confirm. Befor
 **First half (blue chip).**
 - "In the first half, every round opened way off the fair price. And it drifted back. The gap shrank."
 - "That's model one. p prime equals minus lambda times the gap."
-- "The app fit an exponential to your actual trades. The rate came out negative, just like c. That number is your class's lambda, how fast you all reacted."
+- "The app fit an exponential to your actual trades. The decay rate a came out positive, so the gap shrank like e to the minus a t. That number is your class's lambda, how fast you all reacted."
 
 **Second half (meme mode).**
 - "In the second half, I changed one thing. Your cards moved with the price trend."
@@ -728,6 +734,49 @@ $$
 - "They're not. To know what happens after a shock, you need the equation for how the price moves."
 
 **Tie to the game:** "You saw it. First half you pulled the price back. Second half the exact same market, plus one feedback loop, and it ran away."
+-->
+
+---
+
+<div class="tag">The takeaway</div>
+
+# Conclusion
+
+Solving $q_d=q_s$ finds an equilibrium. The dynamics decide whether you ever reach it.
+
+<div class="analogy-grid">
+<div v-click="1">
+
+### Price adjustment model
+
+The gap decays at rate $\lambda(d_1+s_1)$. Every path converges to $p^*$.
+
+</div><div v-click="2">
+
+### Expectations model
+
+The gap grows at rate $k=\frac{d_1+s_1}{d_2+s_2}$. Only $p_0=p^*$ stays put.
+
+</div></div>
+
+<div v-click="3" class="result">Self-reinforcing expectations can make an otherwise ordinary market unstable.</div>
+
+<!--
+**The big idea:** finding where supply meets demand is only half the job. Whether the market ever gets there depends on how the price moves.
+
+**Point at the opening line.**
+- "Setting demand equal to supply tells you where a market could rest. It doesn't tell you if the price will ever get there."
+
+[click] **Price adjustment model.**
+- "When prices just react to shortages and surpluses, the gap shrinks at rate lambda times d1 plus s1. Every starting price ends up at p star."
+
+[click] **Expectations model.**
+- "When people also react to the trend, the gap grows at rate k. The only path that stays at p star is the one that starts there."
+
+[click] **The box.**
+- "So expectations alone can take a perfectly ordinary market and make it unstable."
+
+**If there's time, the honest limits:** "Our models are simplified: straight-line supply and demand, constants that never change, and nothing stopping a negative price. Natural next steps are adaptive expectations, a price floor, or combining both effects in one model."
 
 **Close:** "Thanks. Questions?"
 -->
