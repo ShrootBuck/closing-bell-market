@@ -557,7 +557,7 @@ $$
 $$ {hide|1|all}
 \begin{aligned}
 p(t) &= p^*+(p_0-p^*)e^{kt}\\
-&= \frac{50}{3}+\left(5-\frac{50}{3}\right)e^{3t/10}=\frac{50}{3}-\frac{35}{3}e^{3t/10}
+&= \frac{50}{3}-\frac{35}{3}e^{3t/10}
 \end{aligned}
 $$
 
@@ -588,7 +588,7 @@ At month ten, $p(10)=(50-35e^3)/3\approx-\$217.66$.
 
 [click] **Plug in the numbers.**
 - "So we just plug in constants: p star is 50 over 3, p0 is 5, k is 3 over 10."
-- "We start at five, which is 35 over 3 below equilibrium. About eleven sixty-seven under."
+- "We start at five, which is 35 over 3 below equilibrium, so the starting gap is minus 35 over 3. About eleven sixty-seven under."
 - "Starting below and k is positive. Which way does it go?" (Down, and faster and faster.)
 
 [click] **The answer pops up.**
