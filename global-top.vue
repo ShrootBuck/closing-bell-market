@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
 // World's 100 largest companies by market cap, snapshot from companiesmarketcap.com on Nov 16 2026.
 // Prices in USD. Logos live in public/logos. Rendered above every slide.
 const quotes = [
@@ -105,43 +104,10 @@ const quotes = [
   { r: 100, t: 'IHC', p: '$85.50', c: '+0.00%', logo: 'IHC.AE.png' },
 ]
 const logoUrl = (f: string) => `${import.meta.env.BASE_URL}logos/${f}`
-
-// Slidev letterboxes the slide; stretch the tape over the black bars so it
-// hugs the top edge of the window instead of the top edge of the slide.
-const tape = ref<HTMLElement>()
-const edge = ref({ top: 0, left: 0, right: 0 })
-let ro: ResizeObserver | undefined
-function fit() {
-  const el = tape.value
-  const content = el?.parentElement
-  const box = content?.closest('.slidev-slide-container') as HTMLElement | null
-  if (!content || !box) return
-  const c = content.getBoundingClientRect()
-  const b = box.getBoundingClientRect()
-  const scale = c.width / content.offsetWidth || 1
-  edge.value = {
-    top: Math.min(0, (b.top - c.top) / scale),
-    left: Math.min(0, (b.left - c.left) / scale),
-    right: Math.min(0, (c.right - b.right) / scale),
-  }
-}
-onMounted(() => {
-  fit()
-  const box = tape.value?.closest('.slidev-slide-container')
-  if (box) {
-    ro = new ResizeObserver(fit)
-    ro.observe(box)
-  }
-  window.addEventListener('resize', fit)
-})
-onBeforeUnmount(() => {
-  ro?.disconnect()
-  window.removeEventListener('resize', fit)
-})
 </script>
 
 <template>
-  <div ref="tape" class="cb-tape" aria-hidden="true" :style="{ top: edge.top + 'px', left: edge.left + 'px', right: edge.right + 'px' }">
+  <div class="cb-tape" aria-hidden="true">
     <div class="cb-track">
       <div v-for="k in 2" :key="k" class="cb-seg">
         <span v-for="q in quotes" :key="q.t + k" class="cb-q">
@@ -214,16 +180,5 @@ onBeforeUnmount(() => {
 }
 @media (prefers-reduced-motion: reduce) {
   .cb-track { animation: none; }
-}
-</style>
-
-<style>
-/* Let the tape spill into Slidev's letterbox bar; the container still clips at the window edge.
-   Bars take the slide's base green so the tape, bar and slide read as one surface. */
-.slidev-slide-container {
-  background: #08271e;
-}
-.slidev-slide-container > .slidev-slide-content {
-  overflow: visible;
 }
 </style>
