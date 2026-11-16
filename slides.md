@@ -46,6 +46,8 @@ const basePath = import.meta.env.BASE_URL
 -->
 
 ---
+transition: none
+---
 
 <div class="tag">The starting point</div>
 
@@ -118,27 +120,29 @@ $$
 -->
 
 ---
+transition: none
+---
 
 <div class="tag">Part A</div>
 
 # Price adjustment
 
-<div class="demand-supply corner" ref="corner">
+<div class="demand-supply corner">
 
-<div class="eq-qd">
+<div class="eq-qd"><GlideFrom :dx="-701" :dy="109">
 
 $$
 q_d=d_0-d_1p
 $$
 
-</div>
-<div class="eq-qs">
+</GlideFrom></div>
+<div class="eq-qs"><GlideFrom :dx="-701" :dy="108">
 
 $$
 q_s=-s_0+s_1p
 $$
 
-</div>
+</GlideFrom></div>
 </div>
 
 <div class="reveal-lines">
@@ -154,31 +158,6 @@ p' &= \lambda(q_d-q_s)\\
 $$
 
 </div>
-
-<script setup>
-import { ref } from 'vue'
-import { onSlideEnter } from '@slidev/client'
-
-// Coming forward from slide 2, glide q_d and q_s from where they sat there
-// (left column, slide units) into this corner. Same size, so it's a pure move.
-const corner = ref()
-onSlideEnter((to, from) => {
-  if (from !== to - 1 || !corner.value) return
-  const from2 = [[54, 207], [54, 252]]
-  corner.value.querySelectorAll('.katex-display').forEach((el, i) => {
-    const box = el.getBoundingClientRect()
-    const layout = el.closest('.slidev-layout')
-    const lr = layout.getBoundingClientRect()
-    const k = lr.width / layout.offsetWidth || 1
-    const dx = from2[i][0] - (box.left - lr.left) / k
-    const dy = from2[i][1] - (box.top - lr.top) / k
-    el.animate(
-      [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }],
-      { duration: 1400, easing: 'cubic-bezier(.45,0,.2,1)' },
-    )
-  })
-})
-</script>
 
 <!--
 **The big idea first:** the price moves depending on how out of balance the market is. Too many buyers, it goes up. Too many sellers, it goes down.
@@ -209,12 +188,28 @@ onSlideEnter((to, from) => {
 -->
 
 ---
+class: continued
+---
 
 <div class="tag">Part A</div>
 
 # Price adjustment
 
+<div class="carried"><GlideFrom :dx="-86" :dy="191">
+
+$$
+\begin{aligned}
+p' &= -\lambda(d_1+s_1)(p-p^*)
+\end{aligned}
+$$
+
+</GlideFrom></div>
+
+<div class="after-glide">
+
 Let $a=\lambda(d_1+s_1)>0$, so $p'=-a(p-p^*)$. Multiply by the integrating factor $e^{at}$.
+
+</div>
 
 <div class="reveal-lines">
 
@@ -237,7 +232,7 @@ $p(0)=p_0\;\Rightarrow\;C=p_0-p^*,\quad\text{so}\quad p(t)=p^*+(p_0-p^*)e^{-at}.
 </div>
 
 <!--
-**Last slide ended with p′ = −λ(d1 + s1)(p − p*). Point at a.**
+**The last line of the previous slide, p′ = −λ(d1 + s1)(p − p*), glides up to the top. Then "Let a = …" fades in. Point at a.**
 - "All the constants out front, lambda times d1 plus s1, call that one number a. Lambda, d1, s1 are all positive, so a is positive. Remember that, it's the whole story."
 - "So p prime equals minus a times the gap."
 - "This is a first-order linear equation, so we solve it with an integrating factor: e to the a t."
@@ -283,8 +278,6 @@ $$
 \lim_{t\to\infty}p(t)=p^*
 $$
 
-The gap keeps its sign as it shrinks.
-
 </div><MarketLab mode="stable" /></div>
 
 
@@ -309,7 +302,7 @@ The gap keeps its sign as it shrinks.
 - Slide it up: "Faster reaction, they snap back quicker." Slide it down: "Slower, but they still get there."
 - Point at the caption: "It even tells you: half the gap closes every so many time units. That's a half-life, same as radioactive decay."
 
-**Point at "the gap keeps its sign."**
+**Point at the graph again.**
 - "Notice none of the lines cross the dashed line. Start above, you come down to it. Start below, you come up to it. You never overshoot. e to anything is positive, so the gap never flips sign."
 - Point at the arrows under the graph: "Both arrows point at p star. Everything flows in."
 

@@ -54,6 +54,14 @@
 .slidev-layout .demand-supply p{margin:0}
 .slidev-layout .demand-supply.corner{position:absolute;top:92px;right:54px;padding:0 0 0 18px;border-left:2px solid #38634c}
 
+/* A slide that continues the previous one (same title): don't replay the title. */
+.slidev-layout.continued h1,.slidev-layout.continued .tag{animation:none}
+.slidev-layout.continued .katex-display{margin:4px 0}
+.slidev-layout.continued p{margin:8px 0}
+.slidev-layout.continued .result{margin-top:12px}
+.slidev-layout .after-glide{animation:panel-arrive .6s 1.3s ease both}
+@media(prefers-reduced-motion:reduce){.slidev-layout .after-glide{animation:none}}
+
 /* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
 .slidev-layout .reveal-lines .mord.dishonored{opacity:0}
 
