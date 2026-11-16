@@ -22,7 +22,8 @@ const curve = (initial: number) => Array.from({length:161}, (_,i) => {
 }).join(' ')
 const starts = computed(() => props.mode === 'stable' ? [2,6,14,18] : props.mode === 'unstable' ? [8,9.5,10.5,12] : [5])
 const chartId = 'plot-' + props.mode
-const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,20])
+// In the 10-month view 0 and 20 sit only ~14px apart, so tick −120 instead of 20.
+const axis = computed(() => props.mode === 'example' ? (wide.value ? [-240,-120,0] : [-10,0,20]) : [0,10,20])
 </script>
 
 <template>
@@ -35,10 +36,11 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
       <path :d="'M44 '+(208-price*15.3)+'H414'" stroke="#d7eddf" stroke-dasharray="5 5"/>
       <circle :cx="44+Math.max(0,demand)*30.8" :cy="208-price*15.3" r="5" fill="#70e6a7"/>
       <circle :cx="44+Math.max(0,supply)*30.8" :cy="208-price*15.3" r="5" fill="#f5bd70"/>
-      <text x="8" y="23">p</text><text x="370" y="238">quantity</text>
-      <text x="62" y="44" fill="#70e6a7">demand</text><text x="292" y="43" fill="#f5bd70">supply</text>
-      <text x="5" :y="213-price*15.3">{{ price.toFixed(1) }}</text>
-      <text x="245" y="130">p* = 6</text>
+      <text x="50" y="12">p</text><text x="414" y="232" text-anchor="end">quantity</text>
+      <text x="62" y="44" fill="#70e6a7">demand</text><text x="358" y="29" fill="#f5bd70">supply</text>
+      <text x="38" :y="213-price*15.3" text-anchor="end">{{ price.toFixed(1) }}</text>
+      <circle cx="167.2" cy="116.2" r="3.5" fill="#d7eddf"/>
+      <text x="167" y="104" text-anchor="middle">p* = 6</text>
     </svg>
     <label>Posted price <input v-model.number="price" type="range" min="2" max="10" step=".5" /><output>{{ price.toFixed(1) }}</output></label>
     <div class="lab-readout">Demand {{ demand.toFixed(1) }} · Supply {{ supply.toFixed(1) }}</div>
@@ -50,13 +52,14 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
       <defs><clipPath :id="chartId"><rect x="44" y="17" width="370" height="191"/></clipPath></defs>
       <path d="M44 18V208H414" fill="none" stroke="#719a88"/>
       <path v-for="value in axis" :key="value" :d="'M44 '+y(value)+'H414'" stroke="#284d40"/>
-      <text v-for="value in axis" :key="'label'+value" x="3" :y="y(value)+5">{{ value }}</text>
+      <text v-for="value in axis" :key="'label'+value" x="38" :y="y(value)+5" text-anchor="end">{{ value }}</text>
       <path :d="'M44 '+y(equilibrium)+'H414'" stroke="#bad4c7" stroke-dasharray="5 5"/>
-      <text x="300" :y="y(equilibrium)-7">p* = {{ equilibrium.toFixed(mode === 'example' ? 2 : 0) }}</text>
       <g :clip-path="'url(#'+chartId+')'">
         <polyline class="draw-curve" pathLength="1" v-for="(initial, index) in starts" :key="initial + animationKey" :style="{ animationDelay: (index * 120) + 'ms' }" :points="curve(initial)" fill="none" :stroke="mode === 'stable' ? '#70e6a7' : '#f5bd70'" stroke-width="3"/>
       </g>
-      <text x="10" y="13">price</text><text x="42" y="235">0</text><text x="340" y="235">{{ horizon }} {{ mode === 'example' ? 'months' : 'time units' }}</text>
+      <!-- Labels go after the curves so their halo sits on top of any line. -->
+      <text x="410" :y="y(equilibrium)-7" text-anchor="end">p* = {{ equilibrium.toFixed(mode === 'example' ? 2 : 0) }}</text>
+      <text x="50" y="12">price</text><text x="44" y="230" text-anchor="middle">0</text><text x="414" y="230" text-anchor="end">{{ horizon }} {{ mode === 'example' ? 'months' : 'time units' }}</text>
     </svg>
     <template v-if="mode === 'stable'">
       <label>Speed λ(d₁+s₁) <input v-model.number="speed" type="range" min=".1" max="2" step=".05"/><output>{{ speed.toFixed(2) }}</output></label>
@@ -78,7 +81,9 @@ const axis = computed(() => props.mode === 'example' ? [lo.value,0,20] : [0,10,2
 
 <style scoped>
 .market-lab{position:relative;background:#0b2d23;border:1px solid #315647;border-radius:12px;padding:14px}
-svg{width:100%;height:190px;display:block;font:14px Arial,sans-serif;fill:#bad4c7}
+svg{width:100%;height:190px;display:block;font:14px Arial,sans-serif;fill:#bad4c7;overflow:visible}
+/* A halo in the panel colour, so a line passing a label goes behind the text. */
+svg text{paint-order:stroke;stroke:#0b2d23;stroke-width:5px;stroke-linejoin:round}
 label{display:grid;grid-template-columns:auto 1fr 42px;gap:9px;align-items:center;font:14px Arial,sans-serif;color:#d7eddf}
 input{width:100%;accent-color:#70e6a7}output{text-align:right;font-variant-numeric:tabular-nums}
 .lab-readout,.phase-line{font:16px Arial,sans-serif;margin-top:14px;text-align:center}
