@@ -214,38 +214,70 @@ onSlideEnter((to, from) => {
 
 # Price adjustment
 
-Set $x=p-p^*$ and $c=-\lambda(d_1+s_1)$. Then $x'=cx$.
+Let $a=\lambda(d_1+s_1)>0$, so $p'=-a(p-p^*)$. Multiply by the integrating factor $e^{at}$.
+
+<div class="reveal-lines">
+
+$$ {hide|1|1-2|1-3|1-4|all}
+\begin{aligned}
+p'+ap &= ap^*\\
+e^{at}p'+ae^{at}p &= ap^*e^{at}\\
+\big(e^{at}p\big)' &= ap^*e^{at}\\
+e^{at}p &= p^*e^{at}+C\\
+p &= p^*+Ce^{-at}
+\end{aligned}
+$$
+
+</div>
 
 <div v-click class="result">
 
-$x(t)=x(0)e^{ct}\quad\Rightarrow\quad p(t)=p^*+(p_0-p^*)e^{ct}.$
+$p(0)=p_0\;\Rightarrow\;C=p_0-p^*,\quad\text{so}\quad p(t)=p^*+(p_0-p^*)e^{-at}.$
 
 </div>
 
 <!--
-**Last slide ended with p′ = −λ(d1 + s1)(p − p*). Point at x and c.**
-- "Let's give the gap a name: x. x is just the distance from equilibrium."
-- "p star never changes, so the gap changes exactly as fast as the price does."
-- "And all the constants out front, call that one number c. Lambda, d1, s1 are all positive, so c is negative. Remember that, it's the whole story."
-- "So everything collapses to x prime equals c x: the gap changes at a speed proportional to itself."
+**Last slide ended with p′ = −λ(d1 + s1)(p − p*). Point at a.**
+- "All the constants out front, lambda times d1 plus s1, call that one number a. Lambda, d1, s1 are all positive, so a is positive. Remember that, it's the whole story."
+- "So p prime equals minus a times the gap."
+- "This is a first-order linear equation, so we solve it with an integrating factor: e to the a t."
+
+[click] **Line 1 — point at p′ + ap = ap*.**
+- "Distribute the minus a and move the p term to the left. Standard linear form: p prime plus a p equals a p star."
+
+[click] **Line 2 — multiply through by e^{at}.**
+- "Multiply every term by e to the a t."
+
+[click] **Line 3 — point at (e^{at} p)′.**
+- "The left side is exactly the product rule for e to the a t times p. That's why we picked that factor."
+
+[click] **Line 4 — integrate both sides.**
+- "Integrate. The integral of a p star e to the a t is p star e to the a t, plus a constant C."
+
+[click] **Line 5 — divide by e^{at}.**
+- "Divide through and the price is p star plus C e to the minus a t."
 
 [click] **The answer pops up.**
-- "Any time something's rate of change is proportional to itself, it's an exponential. So x of t is the starting gap times e to the c t."
-- "Add p star back and you get the price path: p star plus the starting gap times e to the c t."
-- "c is negative, so e to the c t shrinks. The gap dies out. That's the punchline for the next slide."
+- "At time zero, the exponential is 1, so p0 equals p star plus C. C is just the starting gap, p0 minus p star."
+- "So the price path is p star plus the starting gap times e to the minus a t."
+- "a is positive, so e to the minus a t shrinks. The gap dies out. That's the punchline for the next slide."
 
 **If anyone looks lost:** "Forget the algebra for a sec. Price too high, sellers pile up, price falls. Price too low, buyers pile up, price rises. The math just proves it happens smoothly and exponentially."
 -->
 
 ---
 
-<div class="tag">Part B · Global stability</div>
+<div class="tag">Part B</div>
 
-# Every starting price returns
+# Global stability
 
 <div class="split"><div>
 
-Since $c<0$, the factor $e^{ct}$ shrinks to zero.
+$$
+p(t)=p^*+(p_0-p^*)e^{-at}
+$$
+
+Since $a>0$, the factor $e^{-at}$ shrinks to zero.
 
 $$
 \lim_{t\to\infty}p(t)=p^*
@@ -259,8 +291,10 @@ The gap keeps its sign as it shrinks.
 <!--
 **The big idea:** in model one, every starting price comes back to p star. That's what "globally stable" means.
 
-**Point at "c < 0, e^{ct} shrinks to zero."**
-- "Remember c is negative. e to a negative number times t gets smaller and smaller. It goes to zero."
+**Point at p(t) at the top.** "Here's the price path we just solved for."
+
+**Point at "a > 0, e^{−at} shrinks to zero."**
+- "Remember a is positive. e to minus a t gets smaller and smaller. It goes to zero."
 - "And the gap is the starting gap times that shrinking number. So the gap goes to zero too."
 
 **Point at the limit.**
@@ -284,9 +318,9 @@ The gap keeps its sign as it shrinks.
 
 ---
 
-<div class="tag">Part C · Expectations</div>
+<div class="tag">Part C</div>
 
-# What if buyers expect a price change?
+# Expectations
 
 $$
 q_d=d_0-d_1p+d_2p' \qquad q_s=-s_0+s_1p-s_2p'
@@ -338,7 +372,7 @@ $$
 
 <div v-click class="result">
 
-Using $x=p-p^*$ again gives $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
+The same integrating-factor steps, now with $e^{-kt}$, give $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
 
 </div>
 
@@ -358,10 +392,11 @@ Using $x=p-p^*$ again gives $\displaystyle p(t)=p^*+(p_0-p^*)e^{kt}$.
 - "Everything in k is positive, so k is positive."
 
 **Stop and compare out loud.**
-- "Model one was p prime equals c times the gap, with c negative. This is p prime equals k times the gap, with k positive. Same shape, opposite sign."
+- "Model one was p prime equals minus a times the gap, with a positive. This is p prime equals plus k times the gap, with k positive. Same shape, opposite sign."
 
 [click] **The answer pops up.**
-- "Same equation type as before, so same exponential solution. p star plus the starting gap times e to the k t."
+- "Same kind of linear equation, so same method: p prime minus k p equals minus k p star, multiply by the integrating factor e to the minus k t, integrate, and plug in p0."
+- "You get p star plus the starting gap times e to the k t."
 - "Only now k is positive, so e to the k t grows."
 
 **Why the sign makes sense:** "Say price is below p star. Normally buyers would outnumber sellers. For the market to still clear, the price has to be falling: falling prices make buyers wait and sellers dump. So below p star, the price falls. It runs away."
