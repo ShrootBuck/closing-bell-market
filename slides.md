@@ -374,19 +374,20 @@ When the price is expected to rise, buyers purchase more and suppliers sell less
 
 <div class="reveal-lines">
 
-$$ {hide|1|1-2|all}
+$$ {hide|1|1-2|1-3|all}
 \begin{aligned}
 d_0-d_1p+d_2p' &= -s_0+s_1p-s_2p'\\
 (d_2+s_2)p' &= (d_1+s_1)p-(d_0+s_0)\\
+p' &= \frac{d_1+s_1}{d_2+s_2}\left[p-\frac{d_0+s_0}{d_1+s_1}\right]\\
 p' &= k(p-p^*),\qquad k=\frac{d_1+s_1}{d_2+s_2}>0
 \end{aligned}
 $$
 
 </div>
 
-<div v-click="4" class="result reveal-lines same-steps">
+<div v-click="5" class="result reveal-lines same-steps">
 
-$$ {1|all} {at:5}
+$$ {1|all} {at:6}
 \begin{aligned}
 \text{Part A:}\quad p' &= -a(p-p^*) &\;\Longrightarrow\;\; p(t) &= p^*+(p_0-p^*)e^{-at}\\
 \text{Now:}\quad p' &= \phantom{-}k(p-p^*) &\;\Longrightarrow\;\; p(t) &= p^*+(p_0-p^*)e^{kt}
@@ -405,8 +406,12 @@ $$
 - "Move all the p prime terms to the left. d2 p prime and plus s2 p prime, so d2 plus s2 times p prime."
 - "Move the plain p terms to the right. Those become d1 plus s1 times p, minus d0 plus s0."
 
-[click] **Line 3 — point at p′ = k(p − p*).**
-- "Divide both sides by d2 plus s2. And the same trick as before: d0 plus s0 is d1 plus s1 times p star."
+[click] **Line 3 — point at the bracket.**
+- "Divide both sides by d2 plus s2, and pull d1 plus s1 out of the right side."
+- "Look inside the bracket: d0 plus s0 over d1 plus s1. That's exactly p star again."
+
+[click] **Line 4 — point at p′ = k(p − p*).**
+- "Swap the fraction for p star, and call the number out front k."
 - "So p prime equals k times p minus p star. k is d1 plus s1 over d2 plus s2."
 - "Everything in k is positive, so k is positive."
 
