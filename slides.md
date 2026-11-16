@@ -419,8 +419,6 @@ $$
 p(t)=p^*+(p_0-p^*)e^{kt}
 $$
 
-$k>0$, so $e^{kt}$ grows.
-
 Above $p^*$, the price rises. Below $p^*$, it falls.
 
 Only $p_0=p^*$ gives a constant path.
@@ -433,8 +431,8 @@ Only $p_0=p^*$ gives a constant path.
 
 **Point at p(t) at the top.** "Here's the market-clearing path we just solved for."
 
-**Point at "k > 0, so e^{kt} grows."**
-- "k is positive, so e to the k t gets bigger and bigger. The gap blows up."
+**Point at e^{kt} in p(t).**
+- "Remember k is positive, so e to the k t gets bigger and bigger. The gap blows up."
 
 **Point at the two bullets.**
 - "Start above p star, the price keeps rising. Start below, it keeps falling."
