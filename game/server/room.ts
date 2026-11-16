@@ -64,6 +64,8 @@ function fail(msg: string): never {
 }
 
 const PROPOSAL_MS = 20000;
+const BOT_SLIP = 0.1; // chance a bot quotes past its card (and base chance it takes a losing offer)
+const BOT_SLIP_MAX = 4; // most dollars a bot will ever lose on one trade
 export const MAX_PLAYERS = 80;
 
 export function newRoomData(code: string, hostToken: string, now: number, rng: () => number): RoomData {
@@ -636,6 +638,12 @@ export class Room {
   }
 
   // ---------- bots ----------
+  // Bots are mostly rational, but sometimes take a losing deal. The chance fades
+  // as the loss grows and is zero past BOT_SLIP_MAX, so nobody can farm them.
+  private botSlips(loss: number) {
+    return loss <= BOT_SLIP_MAX && this.env.rng() < BOT_SLIP * (1 - loss / (BOT_SLIP_MAX + 1)) * 2;
+  }
+
   private runBots(now: number) {
     // replies
     const due = this.botReplies.filter((x) => x.at <= now);
@@ -647,7 +655,8 @@ export class Room {
         const bot = this.player(pr.to);
         if (!bot) continue;
         const lim = this.limitOf(bot.id);
-        const ok = lim != null && profitFor(this.roleOf(bot), lim, pr.price) >= 0 && this.env.rng() < 0.92;
+        const profit = lim == null ? null : profitFor(this.roleOf(bot), lim, pr.price);
+        const ok = profit != null && (profit >= 0 ? this.env.rng() < 0.92 : this.botSlips(-profit));
         try {
           this.respond(bot.id, id, ok);
         } catch {
@@ -672,9 +681,11 @@ export class Room {
       const lim = this.limitOf(bot.id);
       if (lim == null) continue;
       const u = this.env.rng();
+      // now and then a bot fat-fingers its quote past its own card
+      const slip = this.env.rng() < BOT_SLIP ? 1 + Math.floor(this.env.rng() * BOT_SLIP_MAX) : 0;
       const price = role === 'buyer'
-        ? Math.floor(Math.min(lim, last - 3 + u * 4.5))
-        : Math.ceil(Math.max(lim, last - 1.5 + u * 4.5));
+        ? Math.floor(Math.min(lim + slip, last - 3 + u * 4.5 + slip))
+        : Math.ceil(Math.max(lim - slip, last - 1.5 + u * 4.5 - slip));
       if (price < 1) continue;
       try {
         this.propose(bot.id, partner.id, price);

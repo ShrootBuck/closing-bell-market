@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import confetti from 'canvas-confetti';
+import { emojiBurst } from '../ui/emojiBurst';
 import { playerKey, store, useRoom } from '../net';
 import type { Fx, Proposal, PublicPlayer, View } from '../../shared/types';
 import { AVATARS, effective, profitFor, rankTitle } from '../../shared/market';
@@ -117,8 +118,7 @@ function Desk({ room, view }: { room: Room; view: View }) {
           sfx.cash();
           vibrate([40, 40, 80]);
           setBoom({ id: fx.print.id, profit });
-          const emoji = confetti.shapeFromText({ text: '💵', scalar: 2 });
-          confetti({ particleCount: 40, spread: 100, origin: { y: 0.6 }, shapes: [emoji], scalar: 2 });
+          emojiBurst('💵', { count: 40, spread: 100, y: 0.6 });
           setTimeout(() => setBoom((b) => (b?.id === fx.print.id ? null : b)), 1600);
         } else if (fx.kind === 'proposal' && fx.proposal.to === me.id) {
           sfx.offer();

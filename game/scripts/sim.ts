@@ -34,6 +34,7 @@ for (let i = 0; i < room.totalRounds; i++) {
   console.log(
     `R${i + 1} ${r.spec.kind.padEnd(6)} p*=${r.spec.pStar.toFixed(2)} gap0=${res.gap0.toFixed(1)} gapEnd=${res.gapEnd.toFixed(1)} n=${res.n}`,
     `| gap by 20s: ${buckets.join(' ')}`,
+    `| bad ${real.filter((p) => (p.bp ?? 0) < 0 || (p.sp ?? 0) < 0).length}`,
     `| fit r=${res.fit?.rate.toFixed(2)} R2=${res.fit?.r2.toFixed(2)}`,
     res.free ? `| free P=${res.free.P.toFixed(1)} r=${res.free.rate.toFixed(2)}` : `| peak ${res.peak?.gap.toFixed(1)}@${res.peak?.t.toFixed(0)}s burst ${res.burst?.toFixed(0)}`,
   );
