@@ -712,7 +712,7 @@ Find someone on the other side, haggle, and report the deal. They confirm. Befor
 - "Half of you are buyers, half sellers. Your card has a secret number."
 - "Buyers: pay less than your number and you profit. Sellers: sell for more than your number."
 - "Find someone on the other side. Out loud, in person, haggle."
-- "When you agree, one of you taps I made a deal, picks the other person, types the price. They hit confirm. Ka-ching."
+- "When you agree, one of you taps Make a deal, picks the other person, types the price. They hit confirm. Ka-ching."
 - "You get a new card after every deal, so keep going. Cards also expire, so use them."
 
 **Practice round.**

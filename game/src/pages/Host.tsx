@@ -253,7 +253,7 @@ function Lobby({ room, view, isHost }: { room: Room; view: View; isHost: boolean
           <div className="howto">
             <span>① Check your secret card</span>
             <span>② Find someone on the other side &amp; haggle</span>
-            <span>③ Tap “I made a deal”, they confirm</span>
+            <span>③ Tap “Make a deal”, they confirm</span>
           </div>
         </div>
         <div className="chips">
@@ -392,7 +392,7 @@ export function ProfitExample() {
 export const HOWTO = [
   { emoji: '🃏', title: 'Check your card', body: 'Buyers: pay LESS than your number to profit. Sellers: sell for MORE than your number. Go past it and you lose money.' },
   { emoji: '🗣️', title: 'Find someone & haggle', body: 'Buyers find sellers. In person, out loud. Agree on a price.' },
-  { emoji: '🤝', title: 'Tap “I made a deal”', body: 'One of you picks the other + types the price. They tap confirm. Ka-ching.' },
+  { emoji: '🤝', title: 'Tap “Make a deal”', body: 'One of you picks the other + types the price. They tap confirm. Ka-ching.' },
 ];
 
 function HowTo({ view }: { view: View }) {

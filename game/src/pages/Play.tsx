@@ -462,7 +462,7 @@ function PhoneTrading({ room, view }: { room: Room; view: View }) {
         </div>
       ) : (
         <button className="btn deal-btn" disabled={!r.running || !card} onClick={() => { unlockAudio(); vibrate(15); setDealOpen(true); }}>
-          🤝 I MADE A DEAL
+          🤝 MAKE A DEAL
         </button>
       )}
       {myTrades.length > 0 && (
@@ -623,7 +623,7 @@ function Incoming({ room, view }: { room: Room; view: View }) {
             {from && <Avatar p={from} size={64} />}
             <div>
               <b>{from?.name}</b> <span className="muted mono">#{from?.desk}</span>
-              <div className="muted small">says you made a deal</div>
+              <div className="muted small">wants to make a deal</div>
             </div>
           </div>
           <div className="inc-what">
