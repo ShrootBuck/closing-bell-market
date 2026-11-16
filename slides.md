@@ -46,8 +46,6 @@ const basePath = import.meta.env.BASE_URL
 -->
 
 ---
-transition: view-transition
----
 
 <div class="tag">The starting point</div>
 
@@ -125,7 +123,7 @@ $$
 
 # Price adjustment
 
-<div class="demand-supply corner">
+<div class="demand-supply corner" ref="corner">
 
 <div class="eq-qd">
 
@@ -156,6 +154,31 @@ p' &= \lambda(q_d-q_s)\\
 $$
 
 </div>
+
+<script setup>
+import { ref } from 'vue'
+import { onSlideEnter } from '@slidev/client'
+
+// Coming forward from slide 2, glide q_d and q_s from where they sat there
+// (left column, slide units) into this corner. Same size, so it's a pure move.
+const corner = ref()
+onSlideEnter((to, from) => {
+  if (from !== to - 1 || !corner.value) return
+  const from2 = [[54, 207], [54, 252]]
+  corner.value.querySelectorAll('.katex-display').forEach((el, i) => {
+    const box = el.getBoundingClientRect()
+    const layout = el.closest('.slidev-layout')
+    const lr = layout.getBoundingClientRect()
+    const k = lr.width / layout.offsetWidth || 1
+    const dx = from2[i][0] - (box.left - lr.left) / k
+    const dy = from2[i][1] - (box.top - lr.top) / k
+    el.animate(
+      [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }],
+      { duration: 1400, easing: 'cubic-bezier(.45,0,.2,1)' },
+    )
+  })
+})
+</script>
 
 <!--
 **The big idea first:** the price moves depending on how out of balance the market is. Too many buyers, it goes up. Too many sellers, it goes down.

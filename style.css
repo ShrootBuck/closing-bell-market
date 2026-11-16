@@ -48,15 +48,11 @@
  .market-shift-enter-active,.market-shift-leave-active,.slidev-vclick-target{transition:none}
 }
 
-/* q_d / q_s glide from slide 2 into the corner of slide 3 (view transition).
+/* q_d / q_s glide from slide 2 into the corner of slide 3 (script on slide 3).
    Each line is its own same-size box, so it only moves, never rescales. */
 .slidev-layout .demand-supply .katex-display{display:inline-block;margin:6px 0}
 .slidev-layout .demand-supply p{margin:0}
-.slidev-layout .eq-qd .katex-display{view-transition-name:eq-qd}
-.slidev-layout .eq-qs .katex-display{view-transition-name:eq-qs}
-.slidev-layout .demand-supply.corner{position:absolute;top:92px;right:54px;padding:0 0 0 18px;border-left:2px solid #38634c}::view-transition-group(eq-qd),::view-transition-group(eq-qs){animation-duration:1.4s;animation-timing-function:cubic-bezier(.45,0,.2,1)}
-::view-transition-old(eq-qd),::view-transition-new(eq-qd),::view-transition-old(eq-qs),::view-transition-new(eq-qs){animation-duration:1.4s}
-::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation-duration:.6s}
+.slidev-layout .demand-supply.corner{position:absolute;top:92px;right:54px;padding:0 0 0 18px;border-left:2px solid #38634c}
 
 /* Line-by-line reveal: lines not yet reached stay invisible instead of dimmed. */
 .slidev-layout .reveal-lines .mord.dishonored{opacity:0}
