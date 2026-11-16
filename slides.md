@@ -735,7 +735,7 @@ $$
 
 # Conclusion
 
-Solving $q_d=q_s$ finds an equilibrium. The dynamics decide whether you ever reach it.
+Setting $q_d=q_s$ allows us to find the equilibrium price. Differential equations then allow us to predict if and how the market reaches this price.
 
 <div class="analogy-grid">
 <div v-click="1">
