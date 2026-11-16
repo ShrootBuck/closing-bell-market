@@ -26,7 +26,7 @@ const basePath = import.meta.env.BASE_URL
 </script>
 
 <!--
-Imagine two markets with exactly the same equilibrium price. In each one, the price starts a dollar below equilibrium. In one market that dollar gap gradually disappears. In the other it doubles, then doubles again. How can the same supply and demand curves give us both outcomes? We’ll solve for the price in each market, then you’ll get to run one.
+Suppose a market has an equilibrium price of ten dollars, but the current price is nine dollars. Will the price rise toward ten dollars, or keep falling? We’ll compare two models that give different answers. In the first, prices respond to excess demand. In the second, buyers and sellers also respond to whether the price is rising or falling. Both models have the same equilibrium price. We’ll solve their differential equations to see what happens over time, then play a trading game.
 -->
 
 ---
